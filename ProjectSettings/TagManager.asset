@@ -16,7 +16,7 @@ TagManager:
   - 
   - Water
   - UI
-  - PlayerBoundary
+  - BulletBoundary
   - Player
   - Bullet
   - EnemyBullet
