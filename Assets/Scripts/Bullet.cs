@@ -10,10 +10,18 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(this.transform.position.x > 80)
-        {
-            Destroy(this);
-        }
         this.transform.Translate(Vector3.right * speed * Time.deltaTime);
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.CompareTag("Enemy"))
+        {
+            Debug.Log("Hit!");
+            Destroy(gameObject);
+        }
+        else if(other.gameObject.CompareTag("BulletBoundary"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

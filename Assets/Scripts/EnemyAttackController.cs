@@ -80,11 +80,12 @@ public class EnemyAttackController : MonoBehaviour
 
         float speed = data.bulletSpeed;
         int count = data.bulletsPerFire;
+        float damage = data.bulletDamage;
 
         for(int i=0; i<count; i++)
         {
             yield return new WaitForSeconds(fireInterval);
-            SpawnBullet(direction, speed);
+            SpawnBullet(direction, speed, damage);
         }
     }
     private void FireCircle()
@@ -97,6 +98,7 @@ public class EnemyAttackController : MonoBehaviour
         int count = data.bulletsPerFire;
         float spread = data.spreadAngle;
         float speed = data.bulletSpeed;
+        float damage = data.bulletDamage;
 
         float startAngle = -spread / 2f;
         float angleStep = count > 1 ? spread / (count - 1) : 0f;
@@ -106,7 +108,7 @@ public class EnemyAttackController : MonoBehaviour
             float angle = startAngle + angleStep * i;
             Vector2 dir = GetDirectionFromAngle(angle);
 
-            SpawnBullet(dir, speed);
+            SpawnBullet(dir, speed, damage);
         }
     }
 
@@ -116,10 +118,10 @@ public class EnemyAttackController : MonoBehaviour
         return new Vector2(Mathf.Sin(radian), -Mathf.Cos(radian));
     }
 
-    private void SpawnBullet(Vector2 direction, float speed)
+    private void SpawnBullet(Vector2 direction, float speed, float damage)
     {
         EnemyBullet bullet = PoolingManager.Instance.objectPool.Get();
         bullet.transform.position = transform.position;
-        bullet.Initialize(direction, speed);
+        bullet.Initialize(direction, speed, damage);
     }
 }

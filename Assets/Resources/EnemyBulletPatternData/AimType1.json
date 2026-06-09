@@ -2,6 +2,7 @@
     "id": "AimType1",
     "bulletForm": 0,
     "bulletSpeed": 20,
+    "bulletDamage": 50,
     "firePerAttack": 3,
     "bulletsPerFire": 3,
     "spreadAngle": 0,

@@ -2,6 +2,7 @@
     "id": "FanType1",
     "bulletForm": 2,
     "bulletSpeed": 5,
+    "bulletDamage": 20,
     "firePerAttack": 1,
     "bulletsPerFire": 10,
     "spreadAngle": 30,

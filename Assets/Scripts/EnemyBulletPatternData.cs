@@ -14,6 +14,7 @@ public class EnemyBulletPatternData
     public string id;
     public BulletForm bulletForm;
     public float bulletSpeed;
+    public float bulletDamage;
     public int firePerAttack;
     public int bulletsPerFire;
     public float spreadAngle;
