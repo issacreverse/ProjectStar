@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float attackPerSec = 10f;
     private float attackTimer;  
     [SerializeField] private GameObject bullet;
+    [SerializeField] private Transform firePos;
 
     //Input System Package 
     InputAction moveAction;
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour
                     Debug.Log("objectPool is null");
                 }
                 GameObject bulletObject = Instantiate(bullet);
-                bulletObject.transform.position = this.transform.position;
+                bulletObject.transform.position = firePos.position;
             }
         } 
     }
