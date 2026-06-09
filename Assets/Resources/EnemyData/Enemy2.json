@@ -1,0 +1,5 @@
+{
+    "id": "Enemy2",
+    "moveSpeed": 3,
+    "bulletPatternId": "AimType1" 
+}

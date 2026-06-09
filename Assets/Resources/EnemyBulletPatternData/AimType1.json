@@ -1,0 +1,10 @@
+{
+    "id": "AimType1",
+    "bulletForm": 0,
+    "bulletSpeed": 20,
+    "firePerAttack": 3,
+    "bulletsPerFire": 3,
+    "spreadAngle": 0,
+    "attackInterval": 5,
+    "fireInterval": 0.1
+}

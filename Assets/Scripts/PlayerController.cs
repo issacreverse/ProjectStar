@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     //공격 관련 필드
     public float attackPerSec = 10f;
     private float attackTimer;  
+    [SerializeField] private GameObject bullet;
 
     //Input System Package 
     InputAction moveAction;
@@ -50,7 +51,7 @@ public class PlayerController : MonoBehaviour
                 {
                     Debug.Log("objectPool is null");
                 }
-                Bullet bulletObject = PoolingManager.Instance.objectPool.Get();
+                GameObject bulletObject = Instantiate(bullet);
                 bulletObject.transform.position = this.transform.position;
             }
         } 

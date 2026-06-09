@@ -1,0 +1,10 @@
+{
+    "id": "FanType1",
+    "bulletForm": 2,
+    "bulletSpeed": 5,
+    "firePerAttack": 1,
+    "bulletsPerFire": 10,
+    "spreadAngle": 30,
+    "attackInterval": 1,
+    "fireInterval": 0
+}
