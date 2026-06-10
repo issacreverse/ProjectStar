@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class EnemyBullet : MonoBehaviour
 {
+    //적이 쏘는 탄알 스크립트 
+    //Physics2D Collision Matrix: BulletBoundary, Player 하고만 충돌 
+
     //탄알 속성 필드 
     private Vector2 direction;
     private float speed;
     private float damage;
 
-    //탄알 속성 초기화 
+    //탄알 속성 초기화. EnemyAttackController에서 호출함. 
     public void Initialize(Vector2 _direction, float _speed, float _damage)
     {
         direction = _direction;

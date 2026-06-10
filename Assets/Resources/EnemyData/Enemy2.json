@@ -1,5 +1,6 @@
 {
     "id": "Enemy2",
+    "hitPoints": 80,
     "moveSpeed": 3,
     "bulletPatternId": "AimType1" 
 }

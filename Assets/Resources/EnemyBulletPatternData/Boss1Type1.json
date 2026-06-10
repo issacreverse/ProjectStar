@@ -1,0 +1,12 @@
+{
+    "id": "Boss1Type1",
+    "bulletForm": 2,
+    "bulletSpeed": 7,
+    "bulletDamage": 15,
+    "spreadAngle": 30,
+    "firePerAttack": 5,
+    "bulletsPerFire": 3,
+    "attackInterval": 3,
+    "fireInterval": 0.2,
+    "phase": 1
+}

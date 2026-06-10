@@ -4,14 +4,16 @@ using System.Collections;
 
 public class EnemyAttackController : MonoBehaviour
 {   
+    //적의 공격만을 담당하는 스크립트. EnemyController에 들어있다. 
+
     //공격에 필요한 속성이 담겨있는 타입 
-    private EnemyBulletPatternData data;
+    protected EnemyBulletPatternData data;
     private float attackTimer;
     //플레이어 객체. 조준탄을 위해 저장해둔다. 
-    private GameObject player;
+    protected GameObject player;
 
     //초기화
-    public void Initialize(EnemyBulletPatternData _data)
+    public virtual void Initialize(EnemyBulletPatternData _data)
     {
         Debug.Log("00");
         data = _data;
@@ -28,7 +30,7 @@ public class EnemyAttackController : MonoBehaviour
         }
     }
 
-    void Update()
+    protected virtual void Update()
     {
         //공격 주기가 돌면 공격을 한다 
         attackTimer += Time.deltaTime;
@@ -36,28 +38,26 @@ public class EnemyAttackController : MonoBehaviour
         {
             Debug.Log("attack!");
             attackTimer = 0f;
-            Attack();
+            Attack(data);
         }
     }
 
     //어떤 공격을 할지 결정 
-    private void Attack()
+    protected void Attack(EnemyBulletPatternData _data)
     {
-        Debug.Log("1");
-        Debug.Log(data.bulletForm);
-        switch(data.bulletForm)
+        switch(_data.bulletForm)
         {
             case BulletForm.Aim:
                 Debug.Log("2");
-                FireAim();
+                FireAim(_data);
                 break;
             case BulletForm.Circle:
                 Debug.Log("3");
-                FireCircle();
+                FireCircle(_data);
                 break;
             case BulletForm.Fan:
                 Debug.Log("4");
-                FireFan();
+                FireFan(_data);
                 break;
             default: 
                 Debug.Log("5");
@@ -65,41 +65,39 @@ public class EnemyAttackController : MonoBehaviour
         }
     }
     
-    //공격 형태에 따른 공격의 종류들 
-    private void FireAim()
-    {   
-        float fireInterval = data.fireInterval;
-        StartCoroutine(FireAimCoroutine(fireInterval));
-    }
-    public IEnumerator FireAimCoroutine(float fireInterval)
+    //연사(1번 공격 시 나가는 탄알 수가 1개 이상) 구현 코루틴
+    //형태마다 다른 값을 제외한 값들은 자동 설정해줌. (탄속, 데미지, 공격당 연사 수, 연사 간격)
+    public IEnumerator FireCoroutine(EnemyBulletPatternData _data, Vector2 direction)
     {
-        Vector2 startPosition = transform.position;
-        Vector2 targetPosition = player.transform.position;
+        float speed = _data.bulletSpeed;
+        int firePerAttack = _data.firePerAttack;
+        float damage = _data.bulletDamage;
+        float fireInterval = _data.fireInterval;
 
-        Vector2 direction = (targetPosition - startPosition);
-
-        float speed = data.bulletSpeed;
-        int count = data.bulletsPerFire;
-        float damage = data.bulletDamage;
-
-        for(int i=0; i<count; i++)
+        for(int i=0; i<firePerAttack; i++)
         {
             yield return new WaitForSeconds(fireInterval);
             SpawnBullet(direction, speed, damage);
         }
     }
-    private void FireCircle()
+    //공격 형태에 따른 공격의 종류들 
+    protected void FireAim(EnemyBulletPatternData _data)
+    {   
+        Vector2 startPosition = transform.position;
+        Vector2 targetPosition = player.transform.position;
+
+        Vector2 direction = (targetPosition - startPosition);
+        StartCoroutine(FireCoroutine(_data, direction));
+    }
+    protected void FireCircle(EnemyBulletPatternData _data)
     {
         
     }
-    private void FireFan()
+    
+    protected void FireFan(EnemyBulletPatternData _data)
     {
-        Debug.Log("Fire Fan Form Bullets");
-        int count = data.bulletsPerFire;
-        float spread = data.spreadAngle;
-        float speed = data.bulletSpeed;
-        float damage = data.bulletDamage;
-
+        int count = _data.bulletsPerFire;
+        float spread = _data.spreadAngle;
         float startAngle = -spread / 2f;
         float angleStep = count > 1 ? spread / (count - 1) : 0f;
 
@@ -108,10 +106,11 @@ public class EnemyAttackController : MonoBehaviour
             float angle = startAngle + angleStep * i;
             Vector2 dir = GetDirectionFromAngle(angle);
 
-            SpawnBullet(dir, speed, damage);
+            StartCoroutine(FireCoroutine(_data, dir));
         }
     }
 
+    //각도 계산용 함수
     private Vector2 GetDirectionFromAngle(float angleDegree)
     {
         float radian = (angleDegree-90f) * Mathf.Deg2Rad;

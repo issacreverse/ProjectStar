@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
+using NUnit.Framework.Constraints;
 
- //적 정보를 저장하는 데이터 타입. JSON 파일에서 값들을 가져올 거임.
+//적 정보를 저장하는 데이터 타입. JSON 파일에서 값들을 가져올 거임.
 [Serializable]
 public class EnemyData
 {
-   public string id;
-   public float moveSpeed;
-   public string bulletPatternId;
+   public string id = "none";                            //적 고유 id
+   public float hitPoints = 0;                           //적 체력
+   public float moveSpeed = 0;                           //적 이동속도
+   public string bulletPatternId = "none";               //적이 사용하는 탄알 패턴 id
+   public string[] bulletPatternIds = new string[0];
 }
