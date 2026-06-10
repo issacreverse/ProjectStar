@@ -10,11 +10,12 @@ public class EnemyBossAttackController : EnemyAttackController
 
     //보스 페이즈 상태
     private int phase;
+    //페이즈 전환에 필요한 정보를 받아온다. 
+    private EnemyField _enemyField;
 
     //초기화. 받는 매개변수가 부모클래스와 다르다.
     public void Initialize(Dictionary<int, EnemyBulletPatternData> table)
     {
-        Debug.Log("00");
         bulletPatternPhaseTable = table;
         phase = 1;
         if(bulletPatternPhaseTable.TryGetValue(phase, out EnemyBulletPatternData _data))
@@ -25,6 +26,7 @@ public class EnemyBossAttackController : EnemyAttackController
         {
             Debug.Log("Error: Failed to initialize Boss bullet pattern data");
         }
+        _enemyField = GetComponent<EnemyField>();
     }
 
     protected override void Update()
@@ -40,8 +42,7 @@ public class EnemyBossAttackController : EnemyAttackController
             }
             else
             {
-                Debug.Log("Error: Failed to initialize Boss bullet pattern data");
-                return;
+                Debug.Log($"Error: cannot find phase {phase}.");
             }
         }
         
@@ -49,8 +50,22 @@ public class EnemyBossAttackController : EnemyAttackController
     }
 
     //보스의 현재 페이즈 번호를 반환한다. 
+    //나중에 구조 바꿀 건데 지금은 이렇게 하자 좀...
     private int GetPhase()
     {
+        float hitPoints = _enemyField.GetHitPoints();
+        float hitPointsMax = _enemyField.GetHitPointsMax();
+        if(hitPoints <= hitPointsMax * 0.6f)
+        {
+            if(hitPoints <= hitPointsMax * 0.3f)
+            {
+                Debug.Log("Phase: 3");
+                return 3;
+            }
+            Debug.Log("Phase: 2");
+            return 2;
+        }
+        Debug.Log("Phase: 1");
         return 1;
     }
 }

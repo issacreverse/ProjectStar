@@ -56,7 +56,6 @@ public class DataManager : MonoBehaviour
                 Debug.Log("Error: multiple key values");
                 continue;
             }
-            Debug.Log("ki");
             enemyTable.Add(enemyData.id, enemyData);
         }
         
@@ -71,7 +70,6 @@ public class DataManager : MonoBehaviour
                 Debug.Log("Error: multiple key values");
                 continue;
             }
-            Debug.Log("Wi");
             enemyBulletPatternTable.Add(enemyBulletPatternData.id, enemyBulletPatternData);
         }
 
@@ -113,17 +111,12 @@ public class DataManager : MonoBehaviour
                 Debug.Log("Error: multiple key values");
                 continue;
             }
-            Debug.Log("ki");
             playerTable.Add(playerData.id, playerData);
         }
     }
     //외부에서 호출하는, EnemyData 가져오는 함수. 
     public EnemyData GetEnemyData(string enemyId)
     {
-        if(enemyTable == null)
-        {
-            Debug.Log("hihi");
-        }
         if(enemyTable.TryGetValue(enemyId, out EnemyData data))
         {
             return data;

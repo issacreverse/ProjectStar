@@ -10,6 +10,7 @@ public class EnemyField : MonoBehaviour
     //적 필드 
     private string enemyId;
     private float hitPoints;
+    private float hitPointsMax;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +21,7 @@ public class EnemyField : MonoBehaviour
         //EnemyController를 거치지 않고 DataManager로부터 직접 받아온다. 거쳐서 받아오면 호출순서 때문에 Null 레퍼런스 에러 뜬다. 
         enemyData = DataManager.Instance.GetEnemyData(enemyId);
         hitPoints = enemyData.hitPoints;
+        hitPointsMax = hitPoints;
     }
 
     // Update is called once per frame
@@ -40,5 +42,15 @@ public class EnemyField : MonoBehaviour
     private void Die()
     {
         Destroy(gameObject);
+    }
+    //체력값을 반환한다. 
+    public float GetHitPoints()
+    {
+        return hitPoints;
+    }
+    //체력최대치값을 반환한다. 비율 계산이나 회복 계산할 때 사용한다. 
+    public float GetHitPointsMax()
+    {
+        return hitPointsMax;
     }
 }

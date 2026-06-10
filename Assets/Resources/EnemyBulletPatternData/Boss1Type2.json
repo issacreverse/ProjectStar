@@ -6,5 +6,5 @@
     "firePerAttack": 1,
     "bulletsPerFire": 30,
     "attackInterval": 1,
-    "phase": 2
+    "phase": 3
 }

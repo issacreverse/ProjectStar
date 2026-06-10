@@ -10,6 +10,7 @@ public class PlayerField : MonoBehaviour
     //플레이어 필드
     private string playerId;
     private float hitPoints;
+    private float hitPointsMax;
 
     void Start()
     {
@@ -19,6 +20,7 @@ public class PlayerField : MonoBehaviour
         //PlayerController를 거치지 않고 DataManager로부터 직접 받아온다. 거쳐서 받아올 경우 호출 순서 때문에 Null 레퍼런스 에러 뜬다. 
         playerData = DataManager.Instance.GetPlayerData(playerId);
         hitPoints = playerData.hitPoints;
+        hitPointsMax = hitPoints;
     }
     void Update()
     {

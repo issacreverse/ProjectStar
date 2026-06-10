@@ -29,7 +29,6 @@ public class EnemyBullet : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player Hit!");
             PlayerField _playerField = other.gameObject.GetComponent<PlayerField>();
             _playerField.TakeDamage(damage);
 

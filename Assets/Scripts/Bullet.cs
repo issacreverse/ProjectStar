@@ -31,7 +31,6 @@ public class Bullet : MonoBehaviour
         //적과 충돌하면 데미지를 준다. 
         if(other.gameObject.CompareTag("Enemy"))
         {
-            Debug.Log("Hit!");
             EnemyField _enemyField = other.gameObject.GetComponent<EnemyField>();
             _enemyField.TakeDamage(damage);
             Destroy(gameObject);

@@ -15,7 +15,6 @@ public class EnemyAttackController : MonoBehaviour
     //초기화
     public virtual void Initialize(EnemyBulletPatternData _data)
     {
-        Debug.Log("00");
         data = _data;
         attackTimer = 0f;
     }
@@ -36,7 +35,6 @@ public class EnemyAttackController : MonoBehaviour
         attackTimer += Time.deltaTime;
         if(attackTimer >= data.attackInterval)
         {
-            Debug.Log("attack!");
             attackTimer = 0f;
             Attack(data);
         }
@@ -48,19 +46,15 @@ public class EnemyAttackController : MonoBehaviour
         switch(_data.bulletForm)
         {
             case BulletForm.Aim:
-                Debug.Log("2");
                 FireAim(_data);
                 break;
             case BulletForm.Circle:
-                Debug.Log("3");
                 FireCircle(_data);
                 break;
             case BulletForm.Fan:
-                Debug.Log("4");
                 FireFan(_data);
                 break;
             default: 
-                Debug.Log("5");
                 break;
         }
     }
@@ -89,9 +83,21 @@ public class EnemyAttackController : MonoBehaviour
         Vector2 direction = (targetPosition - startPosition);
         StartCoroutine(FireCoroutine(_data, direction));
     }
-    protected void FireCircle(EnemyBulletPatternData _data)
+
+    protected void FireCircle(EnemyBulletPatternData _data) //circle 공격형태는 spread=360인 fan 공격형태와 같다...
     {
-        
+        int count = _data.bulletsPerFire;
+        float spread = 360;
+        float startAngle = 0;
+        float angleStep = count > 1 ? spread / (count - 1) : 0f;
+
+        for(int i=0; i<count; i++)
+        {
+            float angle = startAngle + angleStep * i;
+            Vector2 dir = GetDirectionFromAngle(angle);
+
+            StartCoroutine(FireCoroutine(_data, dir));
+        }
     }
     
     protected void FireFan(EnemyBulletPatternData _data)
@@ -101,7 +107,7 @@ public class EnemyAttackController : MonoBehaviour
         float startAngle = -spread / 2f;
         float angleStep = count > 1 ? spread / (count - 1) : 0f;
 
-        for (int i=0; i<count; i++)
+        for(int i=0; i<count; i++)
         {
             float angle = startAngle + angleStep * i;
             Vector2 dir = GetDirectionFromAngle(angle);
@@ -113,6 +119,7 @@ public class EnemyAttackController : MonoBehaviour
     //각도 계산용 함수
     private Vector2 GetDirectionFromAngle(float angleDegree)
     {
+        //-90f: 왼쪽을 보고 발사하도록 하기 위한 보정값. 
         float radian = (angleDegree-90f) * Mathf.Deg2Rad;
         return new Vector2(Mathf.Sin(radian), -Mathf.Cos(radian));
     }
