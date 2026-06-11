@@ -1,71 +1,79 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Numerics;
+using System.Linq;
+using Unity.VisualScripting;
+
 
 public class EnemyBossAttackController : EnemyAttackController
 {   
     //적의 공격만을 담당하는 스크립트. EnemyController에 들어있다. 
     
     //공격에 필요한 속성이 담겨있는 타입 
-    private Dictionary<int, EnemyBulletPatternData> bulletPatternPhaseTable;
+    private List<EnemyBossPhaseActionData> phaseTable;
+    private List<ConditionActionObject> phaseObjects;
 
-    //보스 페이즈 상태
-    private int phase;
-    //페이즈 전환에 필요한 정보를 받아온다. 
-    private EnemyField _enemyField;
+    //페이즈 번호
+    private int phaseIdx;
+
+    //적 정보를 받아온다. 
+    [HideInInspector] public EnemyField _enemyField;
+
+    //부모 클래스의 St
 
     //초기화. 받는 매개변수가 부모클래스와 다르다.
-    public void Initialize(Dictionary<int, EnemyBulletPatternData> table)
+    public void Initialize(List<EnemyBossPhaseActionData> table)
     {
-        bulletPatternPhaseTable = table;
-        phase = 1;
-        if(bulletPatternPhaseTable.TryGetValue(phase, out EnemyBulletPatternData _data))
-        {
-            data = _data;
-        }
-        else
-        {
-            Debug.Log("Error: Failed to initialize Boss bullet pattern data");
-        }
+        phaseTable = new List<EnemyBossPhaseActionData>();
+        phaseTable = table;
+        phaseIdx = 0;
+        MakeConditionActionObjects();
+
+        //페이즈 액션에서 제어하는 값 참조 가져오기 
         _enemyField = GetComponent<EnemyField>();
+
+        //첫번째 페이즈로 초기화
+        if(phaseObjects.Count > 0)
+        {
+            phaseObjects[0].DoAction(this);
+        }
     }
 
     protected override void Update()
     {
-        //보스의 현재 페이즈를 계산한다. 페이즈가 변경됐다면 보스의 패턴도 바뀐다. 
-        int temp = GetPhase();
-        if(phase != temp)
-        {
-            phase = temp;
-            if(bulletPatternPhaseTable.TryGetValue(phase, out EnemyBulletPatternData _data))
-            {
-                data = _data;
-            }
-            else
-            {
-                Debug.Log($"Error: cannot find phase {phase}.");
-            }
-        }
-        
         base.Update();
-    }
 
-    //보스의 현재 페이즈 번호를 반환한다. 
-    //나중에 구조 바꿀 건데 지금은 이렇게 하자 좀...
-    private int GetPhase()
+        //보스의 페이즈 조건을 검사해서 해당 조건에 맞는 페이즈 액션을 실행한다.
+        CheckBossPhase();
+    }
+    private void MakeConditionActionObjects()
     {
-        float hitPoints = _enemyField.GetHitPoints();
-        float hitPointsMax = _enemyField.GetHitPointsMax();
-        if(hitPoints <= hitPointsMax * 0.6f)
+        phaseObjects = new List<ConditionActionObject>();
+        foreach(var data in phaseTable)
         {
-            if(hitPoints <= hitPointsMax * 0.3f)
+            PhaseCondition o1 = new PhaseCondition(data.condition.type, data.condition.value);
+            PhaseAction[] o2s = new PhaseAction[0];
+            foreach(var action in data.actions)
             {
-                Debug.Log("Phase: 3");
-                return 3;
+                int idx = 0;
+                PhaseAction o2 = new PhaseAction(action.type, action.bulletPatternId, action.value);
+                o2s[idx++] = o2;
             }
-            Debug.Log("Phase: 2");
-            return 2;
+            ConditionActionObject obj = new ConditionActionObject(o1, o2s);
+            phaseObjects.Add(obj);
         }
-        Debug.Log("Phase: 1");
-        return 1;
+    }
+    private void CheckBossPhase()
+    {
+        if(phaseIdx+1 >= phaseObjects.Count)
+            return;
+
+        if(phaseObjects[phaseIdx+1].CheckCondition(this))
+        {
+            phaseIdx++;
+            phaseObjects[phaseIdx].DoAction(this);
+        }
     }
 }
+
+

@@ -2,5 +2,5 @@
     "id": "Boss1",
     "hitPoints": 1000,
     "moveSpeed": 5,
-    "bulletPatternIds": ["Boss1Type1", "Boss1Type2"]
+    "phaseActionIds": ["PhaseAction1", "PhaseAction2", "PhaseAction3"]
 }

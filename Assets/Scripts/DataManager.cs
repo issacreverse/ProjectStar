@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 public class DataManager : MonoBehaviour
@@ -14,7 +13,8 @@ public class DataManager : MonoBehaviour
     //모든 적들의 정보들이 담겨있는 테이블 
     private Dictionary<string, EnemyData> enemyTable;
     private Dictionary<string, EnemyBulletPatternData> enemyBulletPatternTable;
-    private Dictionary<string, Dictionary<int, EnemyBulletPatternData>> enemyBossBulletPatternTable;
+    private Dictionary<string, EnemyBossPhaseActionData> enemyBossPhaseActionTable;                 //페이즈 데이터만을 저장해둔 것
+    private Dictionary<string, List<EnemyBossPhaseActionData>> bossPhaseTable;                      //보스별로 해당 보스가 사용하는 페이즈들을 같이 저장해놓은 것
     //모든 플레이어들의 정보들이 담겨있는 테이블
     private Dictionary<string, PlayerData> playerTable;
 
@@ -30,7 +30,8 @@ public class DataManager : MonoBehaviour
         //테이블 초기화
         enemyTable = new Dictionary<string, EnemyData>();
         enemyBulletPatternTable = new Dictionary<string, EnemyBulletPatternData>();
-        enemyBossBulletPatternTable = new Dictionary<string, Dictionary<int, EnemyBulletPatternData>>();
+        enemyBossPhaseActionTable = new Dictionary<string, EnemyBossPhaseActionData>();
+        bossPhaseTable = new Dictionary<string, List<EnemyBossPhaseActionData>>();
         playerTable = new Dictionary<string, PlayerData>();
         //테이블 초기화 후 읽어온다.
         LoadAllEnemyJsonFiles();
@@ -73,26 +74,43 @@ public class DataManager : MonoBehaviour
             enemyBulletPatternTable.Add(enemyBulletPatternData.id, enemyBulletPatternData);
         }
 
-        //EnemyBulletPatternData를 보스용 딕셔너리 enemyBossBulletPatternTalbe에 저장하기
+        //EnemyBossPhaseActionData들을 읽어와서 딕셔너리 enemyBossPhaseActionTable에 저장하기
+        TextAsset[] jsonFiles3 = Resources.LoadAll<TextAsset>("EnemyBossPhaseActionData");
+        foreach(TextAsset jsonFile3 in jsonFiles3)
+        {
+           EnemyBossPhaseActionData enemyBossPhaseActionData = JsonUtility.FromJson<EnemyBossPhaseActionData>(jsonFile3.text);
+
+            if(enemyBulletPatternTable.ContainsKey(enemyBossPhaseActionData.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            enemyBossPhaseActionTable.Add(enemyBossPhaseActionData.id, enemyBossPhaseActionData);
+        }
+        
+        //enemyBossPhaseActionData를 보스별로 분류해서 정리함. 
         foreach(var pair in enemyTable)
         {
-            string enemyId = pair.Value.id;
-            string[] patternIds = pair.Value.bulletPatternIds;
-            if(patternIds!= null && patternIds.Length > 0)
+            
+            string[] phaseActionIds = pair.Value.phaseActionIds;
+            //phaseAction이 있을 경우 => 즉 페이즈별 행동패턴이 다른 보스 같은 몹일 경우
+            if(phaseActionIds != null && phaseActionIds.Length > 0)
             {
-                foreach(string id in patternIds)
+                
+                foreach(string phaseActionId in phaseActionIds)
                 {
-                    if(enemyBulletPatternTable.TryGetValue(id, out EnemyBulletPatternData data))
+                    if(enemyBossPhaseActionTable.TryGetValue(phaseActionId, out EnemyBossPhaseActionData data))
                     {
-                        if(!enemyBossBulletPatternTable.TryGetValue(enemyId, out Dictionary<int, EnemyBulletPatternData> _data))
+                        if(!bossPhaseTable.ContainsKey(pair.Key))
                         {
-                            enemyBossBulletPatternTable.Add(enemyId, new Dictionary<int, EnemyBulletPatternData>());
+                            List<EnemyBossPhaseActionData> list = new List<EnemyBossPhaseActionData>();
+                            bossPhaseTable.Add(pair.Key, list);
                         }
-                        enemyBossBulletPatternTable[enemyId].Add(data.phase, data);
+                        bossPhaseTable[pair.Key].Add(data);
                     }
                     else
                     {
-                        Debug.Log("Error: Can't find certain patternId in bulletPatternIds[]");
+                        Debug.Log($"Error: Can't find phase action data named {phaseActionId}");
                     }
                 }
             }
@@ -139,12 +157,11 @@ public class DataManager : MonoBehaviour
         Debug.Log($"Error: Can't Find values for key: {enemyId}");
         return null;
     }
-    //외부에서 호출하는, BulletPatternPhaseTable을 가져오는 함수.
-    public Dictionary<int, EnemyBulletPatternData> GetBulletPatternPhaseTable(string enemyId)
+    public List<EnemyBossPhaseActionData> GetEnemyBossPhaseActionData(string enemyId)
     {
-        if(enemyBossBulletPatternTable.TryGetValue(enemyId, out Dictionary<int, EnemyBulletPatternData> bulletPatternData))
+        if(bossPhaseTable.TryGetValue(enemyId, out List<EnemyBossPhaseActionData> list))
         {
-            return bulletPatternData;
+            return list;
         }
         Debug.Log($"Error: Can't Find values for key: {enemyId}");
         return null;

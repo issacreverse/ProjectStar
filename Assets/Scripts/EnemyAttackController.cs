@@ -13,13 +13,13 @@ public class EnemyAttackController : MonoBehaviour
     protected GameObject player;
 
     //초기화
-    public virtual void Initialize(EnemyBulletPatternData _data)
+    public void Initialize(EnemyBulletPatternData _data)
     {
         data = _data;
         attackTimer = 0f;
     }
 
-    void Start()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         if(player == null)
@@ -33,10 +33,14 @@ public class EnemyAttackController : MonoBehaviour
     {
         //공격 주기가 돌면 공격을 한다 
         attackTimer += Time.deltaTime;
-        if(attackTimer >= data.attackInterval)
+
+        if(data != null)
         {
-            attackTimer = 0f;
-            Attack(data);
+            if(attackTimer >= data.attackInterval)
+            {
+                attackTimer = 0f;
+                Attack(data);
+            }
         }
     }
 
@@ -129,5 +133,9 @@ public class EnemyAttackController : MonoBehaviour
         EnemyBullet bullet = PoolingManager.Instance.objectPool.Get();
         bullet.transform.position = transform.position;
         bullet.Initialize(direction, speed, damage);
+    }
+    public void SetBulletPattern(string bulletPatternId)
+    {
+        data = DataManager.Instance.GetEnemyBulletPatternData(bulletPatternId);
     }
 }

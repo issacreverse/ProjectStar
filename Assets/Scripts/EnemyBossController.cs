@@ -8,19 +8,20 @@ public class EnemyBossController : EnemyController
     private EnemyBossAttackController bossAttackController;
 
     //받아온 정보 
-    private Dictionary<int, EnemyBulletPatternData> bulletPatternPhaseTable;
+    private List<EnemyBossPhaseActionData> phaseActionTable;
 
-    protected override void GetBulletPatternDataFromManager()
+    //EnemyController의 같은 함수를 오버라이딩합니다. 보스의 경우 탄알 패턴이 아니라 페이즈 패턴을 받아옵니다. 
+    protected override void GetPatternDataFromManager()
     {
-        bulletPatternPhaseTable = DataManager.Instance.GetBulletPatternPhaseTable(enemyId);
-        if(bulletPatternPhaseTable != null)
+        phaseActionTable = DataManager.Instance.GetEnemyBossPhaseActionData(enemyId);
+        if(phaseActionTable != null)
         {
             bossAttackController = GetComponent<EnemyBossAttackController>();
-            bossAttackController.Initialize(bulletPatternPhaseTable);
+            bossAttackController.Initialize(phaseActionTable);
         }
         else
         {
-            Debug.Log("Error: Failed to store bullet pattern phase table");
+            Debug.Log("Error: Failed to get Enemy Boss Phase Action Data");
         }
     }
     protected override void Update()

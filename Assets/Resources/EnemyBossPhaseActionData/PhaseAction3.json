@@ -1,0 +1,16 @@
+{
+    "id": "PhaseAction3",
+    "condition": 
+    {
+        "type": "HpBelowRatio",
+        "value": 0.3
+    },
+    "action": 
+    [
+        {
+            "type": "ChangeBulletPattern",
+            "bulletPatternId": "Boss1Type2",
+            "value": 0
+        }
+    ]
+}

@@ -23,20 +23,22 @@ public class EnemyController : MonoBehaviour
     private EnemyBulletPatternData bulletPatternData;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected virtual void Start()
+    private void Start()
     {
         //적 속성 값 내려받기
         data = DataManager.Instance.GetEnemyData(enemyId);
+
         if(data != null)
         {
             moveSpeed = data.moveSpeed;
         }
         
-        //탄알 패턴 속성 값 내려받기 
-        GetBulletPatternDataFromManager();
+        //패턴 속성 값 내려받기 
+        GetPatternDataFromManager();
         
     }
-    protected virtual void GetBulletPatternDataFromManager()
+    //탄알 패턴을 받아온다. 
+    protected virtual void GetPatternDataFromManager()
     {
         bulletPatternData = DataManager.Instance.GetEnemyBulletPatternData(enemyId);
         if(bulletPatternData != null)

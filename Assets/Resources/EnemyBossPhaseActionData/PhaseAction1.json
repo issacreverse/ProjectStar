@@ -1,0 +1,16 @@
+{
+    "id": "PhaseAction1",
+    "condition": 
+    {
+        "type": "Default",
+        "value": 0
+    },
+    "action": 
+    [
+        {
+            "type": "none",
+            "bulletPatternId": "Boss1Type1",
+            "value": 0
+        }
+    ]
+}
