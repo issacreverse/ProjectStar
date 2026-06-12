@@ -4,6 +4,7 @@ public enum SpawnPoint
 {
     None
 }
+[Serializable]
 public class EnemyGroup
 {
     public string enemyId = "none";                                 //스폰되는 적의 id

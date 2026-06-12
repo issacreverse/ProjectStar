@@ -61,7 +61,6 @@ public class WaveManager : MonoBehaviour
     {
         if(!isWaveManagerActive)
             return;
-        
         if(!isWaveSpawnStart)
         {
             isWaveSpawnStart = true;

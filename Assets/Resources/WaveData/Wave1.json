@@ -6,7 +6,7 @@
     [
         {
             "enemyId": "Enemy1",
-            "count": 4,
+            "count": 2,
             "startDelay": 0,
             "spawnInterval": 0.5,
             "spawnPointId": "none"      
