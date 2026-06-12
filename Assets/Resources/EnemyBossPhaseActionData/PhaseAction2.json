@@ -5,7 +5,7 @@
         "type": "HpBelowRatio",
         "value": 0.6
     },
-    "action": 
+    "actions": 
     [
         {
             "type": "ChangeField",

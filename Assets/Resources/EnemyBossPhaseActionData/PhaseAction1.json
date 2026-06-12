@@ -5,10 +5,10 @@
         "type": "Default",
         "value": 0
     },
-    "action": 
+    "actions": 
     [
         {
-            "type": "none",
+            "type": "ChangeBulletPattern",
             "bulletPatternId": "Boss1Type1",
             "value": 0
         }

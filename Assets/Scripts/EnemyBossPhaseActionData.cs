@@ -76,9 +76,11 @@ public class PhaseAction
     }
     public void DoAction(EnemyBossAttackController _this)
     {
+        Debug.Log("2");
         switch(type)
         {
             case PhaseActionType.ChangeBulletPattern: 
+                Debug.Log($"SetBulletPattern to: {bulletPatternId}");
                 _this.SetBulletPattern(bulletPatternId);
                 break;
             case PhaseActionType.ChangeMovePattern:
@@ -98,9 +100,9 @@ public class ConditionActionObject
 
     public ConditionActionObject(PhaseCondition condition, PhaseAction[] actions)
     {
+        Debug.Log("4");
         this.condition = condition;
         this.actions = actions;
-
     }
     public bool CheckCondition(EnemyBossAttackController _this)
     {
@@ -108,8 +110,11 @@ public class ConditionActionObject
     }
     public void DoAction(EnemyBossAttackController _this)
     {
+        if(actions.Length <= 0)
+            Debug.Log("5");
         foreach(var action in actions)
         {
+            Debug.Log("3");
             action.DoAction(_this);
         }
     }

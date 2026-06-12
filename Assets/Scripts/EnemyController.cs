@@ -40,7 +40,8 @@ public class EnemyController : MonoBehaviour
     //탄알 패턴을 받아온다. 
     protected virtual void GetPatternDataFromManager()
     {
-        bulletPatternData = DataManager.Instance.GetEnemyBulletPatternData(enemyId);
+        string bulletPatternId = DataManager.Instance.GetEnemyData(enemyId).bulletPatternId;
+        bulletPatternData = DataManager.Instance.GetEnemyBulletPatternData(bulletPatternId);  
         if(bulletPatternData != null)
         {
             attackController = GetComponent<EnemyAttackController>();

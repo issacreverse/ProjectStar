@@ -134,6 +134,7 @@ public class EnemyAttackController : MonoBehaviour
         bullet.transform.position = transform.position;
         bullet.Initialize(direction, speed, damage);
     }
+    //공격 패턴을 바꿀 일이 있는 보스만 호출. GetEnemyBulletPatternData의 두번째 인자로 true 값을 고정 전달한다. 
     public void SetBulletPattern(string bulletPatternId)
     {
         data = DataManager.Instance.GetEnemyBulletPatternData(bulletPatternId);

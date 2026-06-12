@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.Tilemaps;
 
 
 public class EnemyBossAttackController : EnemyAttackController
@@ -26,6 +27,7 @@ public class EnemyBossAttackController : EnemyAttackController
     {
         phaseTable = new List<EnemyBossPhaseActionData>();
         phaseTable = table;
+        Debug.Log($"Table: {table.Count}, phaseTable: {phaseTable.Count}");
         phaseIdx = 0;
         MakeConditionActionObjects();
 
@@ -35,6 +37,7 @@ public class EnemyBossAttackController : EnemyAttackController
         //첫번째 페이즈로 초기화
         if(phaseObjects.Count > 0)
         {
+            Debug.Log("1");
             phaseObjects[0].DoAction(this);
         }
     }
@@ -51,11 +54,13 @@ public class EnemyBossAttackController : EnemyAttackController
         phaseObjects = new List<ConditionActionObject>();
         foreach(var data in phaseTable)
         {
+            Debug.Log("8");
             PhaseCondition o1 = new PhaseCondition(data.condition.type, data.condition.value);
-            PhaseAction[] o2s = new PhaseAction[0];
+            PhaseAction[] o2s = new PhaseAction[data.actions.Length];
+            int idx = 0;
             foreach(var action in data.actions)
             {
-                int idx = 0;
+                Debug.Log("6");
                 PhaseAction o2 = new PhaseAction(action.type, action.bulletPatternId, action.value);
                 o2s[idx++] = o2;
             }

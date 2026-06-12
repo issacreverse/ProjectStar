@@ -65,7 +65,7 @@ public class DataManager : MonoBehaviour
         foreach(TextAsset jsonFile2 in jsonFiles2)
         {
             EnemyBulletPatternData enemyBulletPatternData = JsonUtility.FromJson<EnemyBulletPatternData>(jsonFile2.text);
-
+            
             if(enemyBulletPatternTable.ContainsKey(enemyBulletPatternData.id))
             {
                 Debug.Log("Error: multiple key values");
@@ -91,21 +91,22 @@ public class DataManager : MonoBehaviour
         //enemyBossPhaseActionData를 보스별로 분류해서 정리함. 
         foreach(var pair in enemyTable)
         {
-            
             string[] phaseActionIds = pair.Value.phaseActionIds;
             //phaseAction이 있을 경우 => 즉 페이즈별 행동패턴이 다른 보스 같은 몹일 경우
             if(phaseActionIds != null && phaseActionIds.Length > 0)
             {
-                
+                Debug.Log("11");
                 foreach(string phaseActionId in phaseActionIds)
                 {
                     if(enemyBossPhaseActionTable.TryGetValue(phaseActionId, out EnemyBossPhaseActionData data))
                     {
                         if(!bossPhaseTable.ContainsKey(pair.Key))
                         {
+                            Debug.Log("12");
                             List<EnemyBossPhaseActionData> list = new List<EnemyBossPhaseActionData>();
                             bossPhaseTable.Add(pair.Key, list);
                         }
+                        Debug.Log("13");
                         bossPhaseTable[pair.Key].Add(data);
                     }
                     else
@@ -139,23 +140,21 @@ public class DataManager : MonoBehaviour
         {
             return data;
         }
-
         Debug.Log($"Error: Can't Find values for key: {enemyId}");
         return null;
     }
-    //외부에서 호출하는, EnemyBulletPatternData 가져오는 함수.
-    public EnemyBulletPatternData GetEnemyBulletPatternData(string enemyId)
+    //외부에서 호출하는, EnemyBulletPatternData 가져오는 함수. 
+    public EnemyBulletPatternData GetEnemyBulletPatternData(string bulletPatternId)
     {
-        if(enemyTable.TryGetValue(enemyId, out EnemyData data))
+        if(enemyBulletPatternTable.TryGetValue(bulletPatternId, out EnemyBulletPatternData data))
         {
-            string bulletPatternId = data.bulletPatternId;
-            if(enemyBulletPatternTable.TryGetValue(bulletPatternId, out EnemyBulletPatternData bulletPatternData))
-            {
-                return bulletPatternData;
-            }
+            return data;
         }
-        Debug.Log($"Error: Can't Find values for key: {enemyId}");
-        return null;
+        else
+        {
+            Debug.Log($"Error: Can't Find bulletPatternData: {bulletPatternId}");
+            return null;
+        }
     }
     public List<EnemyBossPhaseActionData> GetEnemyBossPhaseActionData(string enemyId)
     {
