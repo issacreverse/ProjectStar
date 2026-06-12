@@ -95,18 +95,15 @@ public class DataManager : MonoBehaviour
             //phaseAction이 있을 경우 => 즉 페이즈별 행동패턴이 다른 보스 같은 몹일 경우
             if(phaseActionIds != null && phaseActionIds.Length > 0)
             {
-                Debug.Log("11");
                 foreach(string phaseActionId in phaseActionIds)
                 {
                     if(enemyBossPhaseActionTable.TryGetValue(phaseActionId, out EnemyBossPhaseActionData data))
                     {
                         if(!bossPhaseTable.ContainsKey(pair.Key))
                         {
-                            Debug.Log("12");
                             List<EnemyBossPhaseActionData> list = new List<EnemyBossPhaseActionData>();
                             bossPhaseTable.Add(pair.Key, list);
                         }
-                        Debug.Log("13");
                         bossPhaseTable[pair.Key].Add(data);
                     }
                     else
