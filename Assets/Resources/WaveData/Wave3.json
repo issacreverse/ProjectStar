@@ -1,14 +1,14 @@
 {
-    "id": "Wave2",
+    "id": "Wave3",
     "startDelay": 5,
-    "nextWaveDelay": 15,
+    "nextWaveDelay": 10,
     "spawnGroups": 
     [
         {
-            "enemyId": "Enemy2",
-            "count": 5,
+            "enemyId": "Boss1",
+            "count": 1,
             "startDelay": 0,
-            "spawnInterval": 0.7,
+            "spawnInterval": 0,
             "spawnPointId": "none"      
         }
     ]

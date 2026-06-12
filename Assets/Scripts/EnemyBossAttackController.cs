@@ -1,14 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Tilemaps;
 
 
 public class EnemyBossAttackController : EnemyAttackController
 {   
-    //적의 공격만을 담당하는 스크립트. EnemyController에 들어있다. 
+    //적의 공격및 상태머신 전환을 담당하는 스크립트. EnemyController에 들어있다. 
     
     //공격에 필요한 속성이 담겨있는 타입 
     private List<EnemyBossPhaseActionData> phaseTable;

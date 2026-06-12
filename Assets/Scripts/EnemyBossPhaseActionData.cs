@@ -58,7 +58,7 @@ public enum PhaseActionType
 public class PhaseAction
 {
     PhaseActionType type;
-    string bulletPatternId;
+    string bulletPatternId;             //이 코드 좀 구린 듯. 여기에 저장하지 말 걸. 초기화도 굳이 굳이 필요없는데.
     float value; 
 
     public PhaseAction(string _type, string _bulletPatternId, float _value)
@@ -79,11 +79,13 @@ public class PhaseAction
         switch(type)
         {
             case PhaseActionType.ChangeBulletPattern: 
-                Debug.Log($"SetBulletPattern to: {bulletPatternId}");
+                Debug.Log($"Set BulletPattern to: {bulletPatternId}");
                 _this.SetBulletPattern(bulletPatternId);
                 break;
             case PhaseActionType.ChangeMovePattern:
-                //추가해주세요. 아직 이동 패턴 안 만듦. 
+                string movementPatternId = _this.enemyController.movementPatternData.id;
+                Debug.Log($"Set MovementPattern to: {movementPatternId}");
+                _this.enemyController.SetMovementPattern(movementPatternId);
                 break;
             case PhaseActionType.ChangeField:
                 //이것도 어떤 필드 바뀔 건지 enum 타입 만들고 json 형식도 바꾸고...엉엉 
@@ -120,6 +122,7 @@ public class ConditionActionObject
 public class EnemyBossPhaseActionData
 {
     public string id = "none";                                              //페이즈 데이터 고유 id
+    
     public PhaseConditionData condition = new PhaseConditionData();         //페이즈 조건 데이터
     public PhaseActionData[] actions = new PhaseActionData[0];              //페이즈 행동 데이터
 }
@@ -129,6 +132,7 @@ public class EnemyBossPhaseActionData
 public class PhaseConditionData
 {
     public string type = "none";                            //페이즈 조건 타입 (Enum PhaseConditionType으로 변환할 거임)
+
     public float value = 0f;                                //페이즈 조건문에 쓰이는 값
 }
 
@@ -137,6 +141,8 @@ public class PhaseConditionData
 public class PhaseActionData
 {
     public string type = "none";                            //페이즈 행동 타입 (Enum PhaseActionType으로 변환할 거임)
+
     public string bulletPatternId = "none";                 //페이즈 행동 중 탄알 패턴 변화 시 바뀔 탄알 패턴 id
+
     public float value = 0f;                                //페이즈 행동에 쓰이는 값
 }

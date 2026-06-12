@@ -1,4 +1,3 @@
-//using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using System.Collections;
 
@@ -11,6 +10,9 @@ public class EnemyAttackController : MonoBehaviour
     private float attackTimer;
     //플레이어 객체. 조준탄을 위해 저장해둔다. 
     protected GameObject player;
+
+    //보스몹의 상태머신에서 movePatternData를 넘겨주기 위해서 참조를 저장한다.  (마음에 안 든다) EnemyBossPhaseActionData 클래스의 DoAction()에서 접근해야돼서 public이다...
+    public EnemyController enemyController;
 
     //초기화
     public void Initialize(EnemyBulletPatternData _data)
@@ -27,6 +29,7 @@ public class EnemyAttackController : MonoBehaviour
             Debug.Log("Error: Can't Find Player Object");
             return;
         }
+        enemyController = gameObject.GetComponent<EnemyController>();
     }
 
     protected virtual void Update()
@@ -134,7 +137,7 @@ public class EnemyAttackController : MonoBehaviour
         bullet.transform.position = transform.position;
         bullet.Initialize(direction, speed, damage);
     }
-    //공격 패턴을 바꿀 일이 있는 보스만 호출. GetEnemyBulletPatternData의 두번째 인자로 true 값을 고정 전달한다. 
+    //공격 패턴을 바꿀 일이 있는 보스만 호출.
     public void SetBulletPattern(string bulletPatternId)
     {
         data = DataManager.Instance.GetEnemyBulletPatternData(bulletPatternId);

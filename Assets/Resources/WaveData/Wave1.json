@@ -1,7 +1,7 @@
 {
     "id": "Wave1",
     "startDelay": 0,
-    "nextWaveDelay": 10,
+    "nextWaveDelay": 15,
     "spawnGroups": 
     [
         {

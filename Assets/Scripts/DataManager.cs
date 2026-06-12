@@ -9,6 +9,8 @@ public class DataManager : MonoBehaviour
 
     //추가적으로 웨이브 스폰 시스템에 사용하는 프리팹도 저장해둡니다. 
 
+    //추가적으로 적의 이동 패턴 데이터를 담은 Json 파일을 읽어옵니다. 
+
     //싱글톤 
     public static DataManager Instance;
 
@@ -24,7 +26,10 @@ public class DataManager : MonoBehaviour
     private Dictionary<string, GameObject> enemyPrefabList;
 
     //웨이브 데이터 정보
-    private List<WaveData> waveList;                
+    private List<WaveData> waveList;
+
+    //이동 패턴 데이터 정보 
+    private Dictionary<string, MovementPatternData> movementPatternTable;                
 
     void Awake()
     {
@@ -43,10 +48,13 @@ public class DataManager : MonoBehaviour
         playerTable = new Dictionary<string, PlayerData>();
         enemyPrefabList = new Dictionary<string, GameObject>();
         waveList = new List<WaveData>();
+        movementPatternTable = new Dictionary<string, MovementPatternData>();
+
         //테이블 초기화 후 읽어온다.
         LoadAllEnemyJsonFiles();
         LoadAllPlayerJsonFiles();
         LoadAllWaveJsonFiles();
+        LoadAllMovementPatternJsonFiles();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -171,6 +179,24 @@ public class DataManager : MonoBehaviour
             }
         }
     }
+
+    //Json 파일에서 movementData 값들을 모두 읽어와서 Dictionary에 저장하는 함수 
+    private void LoadAllMovementPatternJsonFiles()
+    {
+        TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("MovementPatternData");
+        foreach(TextAsset jsonFile in jsonFiles)
+        {
+            MovementPatternData data = JsonUtility.FromJson<MovementPatternData>(jsonFile.text);
+
+            if(movementPatternTable.ContainsKey(data.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            movementPatternTable.Add(data.id, data);
+        }
+    }
+
     //외부에서 호출하는, EnemyData 가져오는 함수. 
     public EnemyData GetEnemyData(string enemyId)
     {
@@ -223,7 +249,7 @@ public class DataManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Can't Find GameObject with Id: {enemyId}");
+            Debug.Log($"Error: Can't Find GameObject with Id: {enemyId}");
         }
         return null;
     }
@@ -240,5 +266,17 @@ public class DataManager : MonoBehaviour
             return waveList;
         }
         return waveList;
+    }
+    public MovementPatternData GetMovementPatternData(string movementPatternId)
+    {
+        if(movementPatternTable.TryGetValue(movementPatternId, out MovementPatternData data))
+        {
+            return data;
+        }
+        else
+        {
+            Debug.Log($"Error: Can't find movementPattern with Id: {movementPatternId}");
+            return null;
+        }
     }
 }

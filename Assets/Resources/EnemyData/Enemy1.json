@@ -1,6 +1,5 @@
 {
     "id": "Enemy1",
     "hitPoints": 100,
-    "moveSpeed": 5,
     "bulletPatternId": "FanType1" 
 }
