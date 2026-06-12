@@ -41,6 +41,7 @@ public class EnemyField : MonoBehaviour
     //내부에서 호출합니다. 죽을 때 호출됩니다. 
     private void Die()
     {
+        WaveManager.Instance.RemoveEnemyFromList(_enemyController);
         Destroy(gameObject);
     }
     //체력값을 반환한다. 

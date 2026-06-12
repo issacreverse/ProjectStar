@@ -1,0 +1,22 @@
+{
+    "id": "Wave1",
+    "startDelay": 0,
+    "nextWaveDelay": 10,
+    "spawnGroups": 
+    [
+        {
+            "enemyId": "Enemy1",
+            "count": 4,
+            "startDelay": 0,
+            "spawnInterval": 0.5,
+            "spawnPointId": "none"      
+        },
+        {
+            "enemyId": "Enemy2",
+            "count": 1,
+            "startDelay": 3,
+            "spawnInterval": 0,
+            "spawnPointId": "none"   
+        }
+    ]
+}

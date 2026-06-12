@@ -7,6 +7,8 @@ public class DataManager : MonoBehaviour
     //Json 파일들을 불러와 안에 있는 데이터를 Dictionary 형태로 정리해놓는 스크립트 
     //다른 스크립트 들은 Id 값을 이용해 이 스크립트로부터 직접 Data를 받아갑니다. 
 
+    //추가적으로 웨이브 스폰 시스템에 사용하는 프리팹도 저장해둡니다. 
+
     //싱글톤 
     public static DataManager Instance;
 
@@ -17,6 +19,12 @@ public class DataManager : MonoBehaviour
     private Dictionary<string, List<EnemyBossPhaseActionData>> bossPhaseTable;                      //보스별로 해당 보스가 사용하는 페이즈들을 같이 저장해놓은 것
     //모든 플레이어들의 정보들이 담겨있는 테이블
     private Dictionary<string, PlayerData> playerTable;
+
+    //모든 적들의 프리팹 정보 
+    private Dictionary<string, GameObject> enemyPrefabList;
+
+    //웨이브 데이터 정보
+    private List<WaveData> waveList;                
 
     void Awake()
     {
@@ -33,14 +41,18 @@ public class DataManager : MonoBehaviour
         enemyBossPhaseActionTable = new Dictionary<string, EnemyBossPhaseActionData>();
         bossPhaseTable = new Dictionary<string, List<EnemyBossPhaseActionData>>();
         playerTable = new Dictionary<string, PlayerData>();
+        enemyPrefabList = new Dictionary<string, GameObject>();
+        waveList = new List<WaveData>();
         //테이블 초기화 후 읽어온다.
         LoadAllEnemyJsonFiles();
         LoadAllPlayerJsonFiles();
+        LoadAllWaveJsonFiles();
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        //적 프리팹 정보를 모두 불러와서 enemyPrefabList에 저장해둡니다
+        LoadAllEnemyPrefabs();
     }
 
     //Json 파일에서 EnemyData, EnemyBulletPatternData값을 모두 읽어와서 Dictionary에 저장하는 함수
@@ -130,6 +142,35 @@ public class DataManager : MonoBehaviour
             playerTable.Add(playerData.id, playerData);
         }
     }
+    //Json 파일에서 waveData 값을 모두 읽어와서 List에 저장하는 함수 
+    private void LoadAllWaveJsonFiles()
+    {
+        TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("WaveData");
+        foreach(TextAsset jsonFile in jsonFiles)
+        {
+            WaveData waveData = JsonUtility.FromJson<WaveData>(jsonFile.text);
+            waveList.Add(waveData);
+        }
+    }
+
+    //Resources 폴더에서 적 프리팹 파일을 모두 가져와서 Dictionary에 저장하는 함수
+    private void LoadAllEnemyPrefabs()
+    {
+        GameObject[] loadedPrefabs = Resources.LoadAll<GameObject>("Prefabs/EnemyPrefabs");
+        enemyPrefabList.Clear();
+
+        foreach(var prefab in loadedPrefabs)
+        {
+            if(enemyPrefabList.ContainsKey(prefab.name))
+            {
+                Debug.Log($"Error: multiple keys for prefab id: {prefab.name}");
+            }
+            else
+            {
+                enemyPrefabList.Add(prefab.name, prefab);
+            }
+        }
+    }
     //외부에서 호출하는, EnemyData 가져오는 함수. 
     public EnemyData GetEnemyData(string enemyId)
     {
@@ -171,5 +212,33 @@ public class DataManager : MonoBehaviour
         }
         Debug.Log($"Error: Can't Find values for key: {playerId}");
         return null;
+    }
+
+    //외부에서 호출하는, 적 프리팹 가져오는 함수. 스폰 시스템에 필요. 
+    public GameObject GetEnemyPrefab(string enemyId)
+    {
+        if(enemyPrefabList.TryGetValue(enemyId, out GameObject prefab))
+        {
+            return prefab;
+        }
+        else
+        {
+            Debug.Log($"Can't Find GameObject with Id: {enemyId}");
+        }
+        return null;
+    }
+    public List<WaveData> GetWaveDataList()
+    {
+        if(waveList == null)
+        {
+            Debug.Log("Error: WaveList is null");
+            return null;
+        }
+        if(waveList.Count <= 0)
+        {
+            Debug.Log("Error: WaveList is Empty");
+            return waveList;
+        }
+        return waveList;
     }
 }
