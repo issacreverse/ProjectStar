@@ -6,17 +6,17 @@
     [
         {
             "enemyId": "Enemy1",
-            "count": 2,
+            "count": 5,
             "startDelay": 0,
             "spawnInterval": 0.5,
-            "spawnPointId": "none"      
+            "spawnPoint": "RightOutside" 
         },
         {
             "enemyId": "Enemy2",
-            "count": 1,
+            "count": 3,
             "startDelay": 3,
             "spawnInterval": 0,
-            "spawnPointId": "none"   
+            "spawnPoint": "TopOutside" 
         }
     ]
 }

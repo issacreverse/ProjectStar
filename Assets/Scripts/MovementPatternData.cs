@@ -45,7 +45,7 @@ public enum FinishConditionType
     None,       
     Duration,                   //일정 시간 경과
     ArriveTarget,               //목적지 도달
-    DurrationOrArriveTarget,    //일정 시간 경과 혹은 목적지 도달
+    DurationOrArriveTarget,    //일정 시간 경과 혹은 목적지 도달
     ExitScreen,                 //화면 밖으로 나갔을 때
     Never                       //강제 종료 되기 전까지 계속 유지
 }
@@ -162,7 +162,7 @@ public class EnemyMovementStep
                 case FinishConditionType.ArriveTarget:
                     return IsArrived(target, data.arriveDistance);
 
-                case FinishConditionType.DurrationOrArriveTarget:
+                case FinishConditionType.DurationOrArriveTarget:
                     return (timeElapsed >= data.duration) || IsArrived(target, data.arriveDistance);
 
                 case FinishConditionType.ExitScreen:

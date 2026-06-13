@@ -9,7 +9,7 @@
             "count": 1,
             "startDelay": 0,
             "spawnInterval": 0,
-            "spawnPointId": "none"      
+            "spawnPoint": "Center"  
         }
     ]
 }

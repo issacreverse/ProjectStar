@@ -2,5 +2,5 @@
     "id": "Enemy1",
     "hitPoints": 100,
     "bulletPatternId": "FanType1",
-    "movementPatternId": "Movement1"
+    "movementPatternId": "Movement2"
 }
