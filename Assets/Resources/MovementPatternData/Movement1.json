@@ -1,0 +1,14 @@
+{
+    "id": "Movement1",
+    "steps":
+    [
+        {
+            "type": "DashToPlayer",
+            "delay": 3.0,
+            "speed": 8.0,
+            "finishCondition": "ExitScreen",
+            "screenMargin": 0.2,
+            "destroyWhenFinished": true
+        }
+    ]
+}

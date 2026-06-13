@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Xml.Serialization;
 
 public class EnemyController : MonoBehaviour
 {
@@ -17,10 +19,14 @@ public class EnemyController : MonoBehaviour
     private MovementStepData[] steps;                           //현재 이동 패턴의 스텝들
     private int stepIdx;                                        //현재 이동 패턴의 스텝 인덱스 
 
-    public float stepTimer;                                     //이동 스텝 duration 계산에 필요한 값 
+    //현재 실행 중인 이동 스텝 코루틴
+    private Coroutine currentMovementCoroutine;
 
     //공격을 담당하는 스크립트 
     private EnemyAttackController attackController;
+    
+    //플레이어 정보
+    public GameObject player;
 
     //받아온 적 정보 
     protected EnemyData data;
@@ -29,12 +35,17 @@ public class EnemyController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        if(player == null)
+        {
+            Debug.Log("Error: Can't Find Player Object");
+            return;
+        }
         //적 속성 값 내려받기
         data = DataManager.Instance.GetEnemyData(enemyId);
 
         //패턴 속성 값 내려받기 
         GetPatternDataFromManager();
-
     }
 
     //적의 탄알 패턴 및 이동 패턴을 DataManager로부터 받아옵니다.
@@ -49,29 +60,16 @@ public class EnemyController : MonoBehaviour
             attackController.Initialize(bulletPatternData);
         }
         //이동 패턴을 받아온다.
-        movementPatternData = DataManager.Instance.GetMovementPatternData(data.movementPatternDataId);
+        movementPatternData = DataManager.Instance.GetMovementPatternData(data.movementPatternId);
+
         //최초 이동 패턴을 실행합니다. (보스몹도 첫번째 페이즈 실행 완료 시점이다)
         StartMovement();
     }
 
     // Update is called once per frame
     protected virtual void Update()
-    {   
-        stepTimer += Time.deltaTime;
-        
-        //이동 스텝 종료 조건을 만족하면 전 스텝을 멈추고, 다음 스텝을 재생합니다.
-        if(stepObj.CheckCondition(this))
-        {
-            stepObj.Stop();
-            stepIdx++;
-            if(stepIdx < steps.Length)
-            {
-                stepObj = new EnemyMovementStep(steps[stepIdx]);
-                stepObj.Play();
+    {
 
-                stepTimer = 0f;
-            }
-        }
     } 
     
     //다른 스크립트들은 이 함수를 사용하여 해당스크립트로부터 id를 가져옵니다. 이 스크립트가 본체라는 뜻.
@@ -85,19 +83,41 @@ public class EnemyController : MonoBehaviour
         movementPatternData = DataManager.Instance.GetMovementPatternData(movementPatternId);
 
         //이전 거 중지하고 새로운 거 실행
-        stepObj.Stop();
+        if(currentMovementCoroutine != null)
+        {
+            StopCoroutine(currentMovementCoroutine);
+            currentMovementCoroutine = null;
+        }
         StartMovement();
     }
     
     //현재 movementPatternData에 들어있는 이동 패턴을 실행합니다. movementPatternData 객체를 생성합니다.
     private void StartMovement()
     {   
+        if(movementPatternData == null)
+            return;
         steps = movementPatternData.steps;
         stepIdx = 0;
         
-        stepObj = new EnemyMovementStep(steps[stepIdx]);
-        stepObj.Play();
 
-        stepTimer = 0f;
+        stepObj = new EnemyMovementStep(this, steps[stepIdx]);
+        currentMovementCoroutine = StartCoroutine(stepObj.Play());
+
+    }
+    //stepObj의 FinishStep()이 호출되면 자동으로 이 함수를 호출하여 다음 스텝 실행을 시도합니다. 
+    public void NextMovement()
+    {
+        stepIdx++;
+
+        if(stepIdx >= steps.Length)
+            return;
+
+        stepObj = new EnemyMovementStep(this, steps[stepIdx]);
+        currentMovementCoroutine = StartCoroutine(stepObj.Play());
+    }
+    public void DestroyWhenFinished()
+    {
+        WaveManager.Instance.RemoveEnemyFromList(this);
+        Destroy(gameObject);
     }
 }

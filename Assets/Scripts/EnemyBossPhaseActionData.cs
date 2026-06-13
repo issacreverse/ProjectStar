@@ -52,16 +52,17 @@ public enum PhaseActionType
 {
     None,
     ChangeBulletPattern,    //탄알 패턴 변경
-    ChangeMovePattern,      //이동 패턴 변경
+    ChangeMovementPattern,      //이동 패턴 변경
     ChangeField             //체력, 이동 속도 등 적 상태 변경
 }
 public class PhaseAction
 {
     PhaseActionType type;
     string bulletPatternId;             //이 코드 좀 구린 듯. 여기에 저장하지 말 걸. 초기화도 굳이 굳이 필요없는데.
+    string movementPatternId;
     float value; 
 
-    public PhaseAction(string _type, string _bulletPatternId, float _value)
+    public PhaseAction(string _type, string _bulletPatternId, string _movementPatternId, float _value)
     {
         if(Enum.TryParse(_type, out PhaseActionType type))
         {
@@ -72,6 +73,7 @@ public class PhaseAction
             Debug.Log("Error: Failed parsing to PhaseActionType");
         }
         bulletPatternId = _bulletPatternId;
+        movementPatternId = _movementPatternId;
         value = _value;
     }
     public void DoAction(EnemyBossAttackController _this)
@@ -82,8 +84,7 @@ public class PhaseAction
                 Debug.Log($"Set BulletPattern to: {bulletPatternId}");
                 _this.SetBulletPattern(bulletPatternId);
                 break;
-            case PhaseActionType.ChangeMovePattern:
-                string movementPatternId = _this.enemyController.movementPatternData.id;
+            case PhaseActionType.ChangeMovementPattern:
                 Debug.Log($"Set MovementPattern to: {movementPatternId}");
                 _this.enemyController.SetMovementPattern(movementPatternId);
                 break;
@@ -143,6 +144,8 @@ public class PhaseActionData
     public string type = "none";                            //페이즈 행동 타입 (Enum PhaseActionType으로 변환할 거임)
 
     public string bulletPatternId = "none";                 //페이즈 행동 중 탄알 패턴 변화 시 바뀔 탄알 패턴 id
+
+    public string movementPatternId = "none";               //페이즈 행동 중 이동 패턴 변화 시 바뀔 이동 패턴 id
 
     public float value = 0f;                                //페이즈 행동에 쓰이는 값
 }

@@ -23,13 +23,8 @@ public class EnemyAttackController : MonoBehaviour
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        if(player == null)
-        {
-            Debug.Log("Error: Can't Find Player Object");
-            return;
-        }
         enemyController = gameObject.GetComponent<EnemyController>();
+        player = enemyController.player;
     }
 
     protected virtual void Update()

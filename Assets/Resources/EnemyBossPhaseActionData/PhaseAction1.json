@@ -11,6 +11,10 @@
             "type": "ChangeBulletPattern",
             "bulletPatternId": "Boss1Type1",
             "value": 0
+        },
+        {
+            "type": "ChangeMovementPattern",
+            "movementPatternId": "Movement1"
         }
     ]
 }
