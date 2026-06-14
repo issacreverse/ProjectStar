@@ -81,11 +81,11 @@ public class PhaseAction
         switch(type)
         {
             case PhaseActionType.ChangeBulletPattern: 
-                Debug.Log($"Set BulletPattern to: {bulletPatternId}");
+                //Debug.Log($"Set BulletPattern to: {bulletPatternId}");
                 _this.SetBulletPattern(bulletPatternId);
                 break;
             case PhaseActionType.ChangeMovementPattern:
-                Debug.Log($"Set MovementPattern to: {movementPatternId}");
+                //Debug.Log($"Set MovementPattern to: {movementPatternId}");
                 _this.enemyController.SetMovementPattern(movementPatternId);
                 break;
             case PhaseActionType.ChangeField:

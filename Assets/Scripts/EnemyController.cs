@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Xml.Serialization;
+using System;
 
 public class EnemyController : MonoBehaviour
 {
@@ -14,10 +14,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] protected string enemyId = "Enemy1";
 
     //적 속성 관련 필드
-    public MovementPatternData movementPatternData;             //EnemyBossPhaseActionData 클래스의 DoAction()에서 접근해야돼서 public이다... 
-    private EnemyMovementStep stepObj;                          //스텝 시작/일시중단 제어용 래퍼 객체 
-    private MovementStepData[] steps;                           //현재 이동 패턴의 스텝들
-    private int stepIdx;                                        //현재 이동 패턴의 스텝 인덱스 
+    [NonSerialized] public MovementPatternData movementPatternData;             //EnemyBossPhaseActionData 클래스의 DoAction()에서 접근해야돼서 public이다... 
+    private EnemyMovementStep stepObj;                                          //스텝 시작/일시중단 제어용 래퍼 객체 
+    private MovementStepData[] steps;                                           //현재 이동 패턴의 스텝들
+    private int stepIdx;                                                        //현재 이동 패턴의 스텝 인덱스 
 
     //현재 실행 중인 이동 스텝 코루틴
     private Coroutine currentMovementCoroutine;
@@ -26,11 +26,15 @@ public class EnemyController : MonoBehaviour
     private EnemyAttackController attackController;
     
     //플레이어 정보
-    public GameObject player;
+    [NonSerialized] public GameObject player;
 
     //받아온 적 정보 
     protected EnemyData data;
     private EnemyBulletPatternData bulletPatternData;
+
+    //적 충돌 정보: 몇 초마다 충돌 처리 할 건지
+    private float touchDamageCoolTime = 1f;
+    private bool istouchDamageReady = true;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -119,5 +123,38 @@ public class EnemyController : MonoBehaviour
     {
         WaveManager.Instance.RemoveEnemyFromList(this);
         Destroy(gameObject);
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(istouchDamageReady)
+        {
+            if(other.gameObject.CompareTag("Player"))
+            {
+                StartCoroutine(ApplyTouchDamage());
+            }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if(istouchDamageReady)
+        {
+            if(other.gameObject.CompareTag("Player"))
+            {
+                StartCoroutine(ApplyTouchDamage());
+            }
+        }
+    }
+
+    public IEnumerator ApplyTouchDamage()
+    {
+        istouchDamageReady = false;
+        player.GetComponent<PlayerField>().TakeDamage(data.touchDamage);
+        if(data.destroyWhenTouch)
+        {
+            gameObject.GetComponent<EnemyField>().Die();
+        }
+        yield return new WaitForSeconds(touchDamageCoolTime);
+        istouchDamageReady = true;
     }
 }

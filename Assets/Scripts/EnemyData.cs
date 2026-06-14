@@ -9,7 +9,11 @@ public class EnemyData
 
    public float hitPoints = 0;                           //적 체력
 
-   public string movementPatternId = "none";         //적이 사용하는 이동 패턴 id 
+   public float touchDamage = 0;                         //접촉 데미지
+
+   public bool destroyWhenTouch = false;                 //접촉 시 파괴할 것인지 여부
+
+   public string movementPatternId = "none";             //적이 사용하는 이동 패턴 id 
    
    public string bulletPatternId = "none";               //적이 사용하는 탄알 패턴 id
 

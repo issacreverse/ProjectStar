@@ -141,7 +141,8 @@ public class EnemyMovementStep
         e = _e;
         data = _data;
         transform = _e.transform;
-        player = _e.player.transform;
+        if(player != null)
+            player = _e.player.transform;
         lastMoveDirection = Vector3.left;
         spawnPosition = transform.position;
 

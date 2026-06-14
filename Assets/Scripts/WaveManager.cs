@@ -162,15 +162,12 @@ public class WaveManager : MonoBehaviour
         switch (spawnPoint)
         {
             case SpawnPoint.RightOutside:
-                Debug.Log("3");
                 return new Vector3(right + outsideOffset, centerY, 0f);
 
             case SpawnPoint.TopOutside:
-                Debug.Log("4");
                 return new Vector3(centerX, top + outsideOffset, 0f);
 
             case SpawnPoint.BottomOutside:
-                Debug.Log("5");
                 return new Vector3(centerX, bottom - outsideOffset, 0f);
 
             case SpawnPoint.TopRight:
@@ -201,7 +198,6 @@ public class WaveManager : MonoBehaviour
                 );
 
             case SpawnPoint.Center:
-                Debug.Log("2");
                 return new Vector3(centerX, centerY, 0f);
 
             case SpawnPoint.NearPlayer:
@@ -242,7 +238,6 @@ public class WaveManager : MonoBehaviour
                 return new Vector3(centerX, top + outsideOffset, 0f);
             
             default:
-                Debug.Log("1");
                 return new Vector3(right + outsideOffset, centerY, 0f);
         }
     }

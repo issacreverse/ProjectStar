@@ -38,8 +38,8 @@ public class EnemyField : MonoBehaviour
     {
         hitPoints -= damage;
     }
-    //내부에서 호출합니다. 죽을 때 호출됩니다. 
-    private void Die()
+    //죽을 때 호출됩니다. 
+    public void Die()
     {
         WaveManager.Instance.RemoveEnemyFromList(_enemyController);
         Destroy(gameObject);

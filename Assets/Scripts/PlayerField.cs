@@ -35,9 +35,10 @@ public class PlayerField : MonoBehaviour
     public void TakeDamage(float damage)
     {
         hitPoints -= damage;
+        Debug.Log($"HIT! {damage} damage");
     }
-    //내부에서 호출합니다. 죽을 때 호출됩니다. 
-    private void Die()
+    //죽을 때 호출됩니다. 
+    public void Die()
     {
         Destroy(gameObject);
     }

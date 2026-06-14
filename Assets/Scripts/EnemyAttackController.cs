@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class EnemyAttackController : MonoBehaviour
 {   
@@ -12,7 +13,7 @@ public class EnemyAttackController : MonoBehaviour
     protected GameObject player;
 
     //보스몹의 상태머신에서 movePatternData를 넘겨주기 위해서 참조를 저장한다.  (마음에 안 든다) EnemyBossPhaseActionData 클래스의 DoAction()에서 접근해야돼서 public이다...
-    public EnemyController enemyController;
+    [NonSerialized] public EnemyController enemyController;
 
     //초기화
     public void Initialize(EnemyBulletPatternData _data)

@@ -14,9 +14,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private string playerId = "Player1";
     //이동 관련 필드
     public float moveSpeed = 5.0f; 
+    public float slowMoveSpeed = 3f;            //정밀 이동 키 누른 상태로 이동했을 때의 속도 
     //공격 관련 필드
-    public float attackPerSec = 10f;
+    public float attackPerSec = 10f;            //초당 공격 횟수 
     private float attackTimer;  
+
     [SerializeField] private GameObject bullet;
     [SerializeField] private Transform firePos;
 
@@ -26,6 +28,7 @@ public class PlayerController : MonoBehaviour
     //Input System Package 
     InputAction moveAction;
     InputAction attackAction;
+    InputAction slowMoveAction;
 
     //플레이어 이동 제한 가로 세로 폭
     public float maxX = 9f;
@@ -42,6 +45,7 @@ public class PlayerController : MonoBehaviour
         //InputSystem 연결하기
         moveAction = InputSystem.actions.FindAction("Move");
         attackAction = InputSystem.actions.FindAction("Attack");    
+        slowMoveAction = InputSystem.actions.FindAction("SlowMove");
         attackTimer = 0f;
     }
 
@@ -50,7 +54,13 @@ public class PlayerController : MonoBehaviour
     {
         //이동
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        transform.Translate(moveValue * moveSpeed * Time.deltaTime);
+        float slowMoveValue = slowMoveAction.ReadValue<float>();
+
+        float playerMoveSpeed = moveSpeed;
+        if(slowMoveValue != 0)
+            playerMoveSpeed= slowMoveSpeed;
+
+        transform.Translate(moveValue * playerMoveSpeed * Time.deltaTime);
 
         //플레이어가 화면 밖으로 나가지 못하도록 위치를 강제조정한다. 
         Vector3 pos = transform.position;

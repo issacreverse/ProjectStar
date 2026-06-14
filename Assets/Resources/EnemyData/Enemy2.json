@@ -1,6 +1,7 @@
 {
     "id": "Enemy2",
     "hitPoints": 80,
+    "touchDamage": 30,
     "bulletPatternId": "AimType1",
     "movementPatternId": "Movement3"
 }

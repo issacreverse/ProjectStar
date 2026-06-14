@@ -1,5 +1,6 @@
 {
     "id": "Boss1",
     "hitPoints": 1000,
+    "touchDamage": 100,
     "phaseActionIds": ["PhaseAction1", "PhaseAction2", "PhaseAction3"]
 }
