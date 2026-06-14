@@ -4,7 +4,7 @@
     "bulletSpeed": 5,
     "bulletDamage": 20,
     "firePerAttack": 1,
-    "bulletsPerFire": 10,
+    "bulletsPerFire": 6,
     "spreadAngle": 30,
     "attackInterval": 1,
     "fireInterval": 0

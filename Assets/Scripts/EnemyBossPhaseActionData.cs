@@ -3,15 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//페이즈 조건문 종류
-public enum PhaseConditionType
-{
-    None,
-    Default,                //페이즈 1 조건. (=조건 없음)
-    HpBelowRatio,           //일정 비율 미만으로 체력이 떨어졌을 때
-    TimeElapsed,            //적이 스폰된 후 일정 시간이 경과했을 때
-    PatternFinished         //적의 패턴이 끝났을 때         //미정
-}
+
 public class PhaseCondition
 {
     PhaseConditionType type;
@@ -47,23 +39,7 @@ public class PhaseCondition
         return false;
     }
 }
-//페이즈 행동 종류
-public enum PhaseActionType
-{
-    None,
-    ChangeBulletPattern,          //탄알 패턴 변경
-    ChangeMovementPattern,        //이동 패턴 변경
-    ChangeField                   //체력, 이동 속도 등 적 상태 변경
-}
 
-//ChangeField 타입의 변경 필드 종류
-public enum ChangeFieldType
-{
-    None, 
-    ChangeMoveSpeed,              //이동 속도 변경
-    ChangeHitPoints,              //체력 변경
-    ChangeTouchDamage             //접촉 데미지 변경 
-}
 public class PhaseAction
 {
     PhaseActionType type;
@@ -127,6 +103,32 @@ public class ConditionActionObject
             action.DoAction(_this);
         }
     }
+}
+//페이즈 조건문 종류
+public enum PhaseConditionType
+{
+    None,
+    Default,                //페이즈 1 조건. (=조건 없음)
+    HpBelowRatio,           //일정 비율 미만으로 체력이 떨어졌을 때
+    TimeElapsed,            //적이 스폰된 후 일정 시간이 경과했을 때
+    PatternFinished         //적의 패턴이 끝났을 때         //미정
+}
+//페이즈 행동 종류
+public enum PhaseActionType
+{
+    None,
+    ChangeBulletPattern,          //탄알 패턴 변경
+    ChangeMovementPattern,        //이동 패턴 변경
+    ChangeField                   //체력, 이동 속도 등 적 상태 변경
+}
+
+//ChangeField 타입의 변경 필드 종류
+public enum ChangeFieldType
+{
+    None, 
+    ChangeMoveSpeed,              //이동 속도 변경
+    ChangeHitPoints,              //체력 변경
+    ChangeTouchDamage             //접촉 데미지 변경 
 }
 
 //페이즈 별 행동 정보를 담고 있는 데이터 타입

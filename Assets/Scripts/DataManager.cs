@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -67,6 +68,7 @@ public class DataManager : MonoBehaviour
     private void LoadAllEnemyJsonFiles()
     {
         //EnemyData 읽어오기
+        /*
         TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("EnemyData");
         foreach(TextAsset jsonFile in jsonFiles)
         {
@@ -79,8 +81,27 @@ public class DataManager : MonoBehaviour
             }
             enemyTable.Add(enemyData.id, enemyData);
         }
+        */
+        string folderPath = Path.Combine(Application.streamingAssetsPath, "EnemyData");
+
+        string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+
+        foreach(string jsonFilePath in jsonFiles)
+        {
+            string jsonText = File.ReadAllText(jsonFilePath);
+
+            EnemyData enemyData = JsonUtility.FromJson<EnemyData>(jsonText);
+
+            if(enemyTable.ContainsKey(enemyData.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            enemyTable.Add(enemyData.id, enemyData);
+        }
         
         //EnemyBulletPatternData 읽어오기
+        /*
         TextAsset[] jsonFiles2 = Resources.LoadAll<TextAsset>("EnemyBulletPatternData");
         foreach(TextAsset jsonFile2 in jsonFiles2)
         {
@@ -93,12 +114,49 @@ public class DataManager : MonoBehaviour
             }
             enemyBulletPatternTable.Add(enemyBulletPatternData.id, enemyBulletPatternData);
         }
+        */
+        string folderPath2 = Path.Combine(Application.streamingAssetsPath, "EnemyBulletPatternData");
+
+        string[] jsonFiles2 = Directory.GetFiles(folderPath2, "*.json");
+
+        foreach(string jsonFilePath in jsonFiles2)
+        {
+            string jsonText = File.ReadAllText(jsonFilePath);
+
+            EnemyBulletPatternData enemyBulletPatternData = JsonUtility.FromJson<EnemyBulletPatternData>(jsonText);
+            
+            if(enemyBulletPatternTable.ContainsKey(enemyBulletPatternData.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            enemyBulletPatternTable.Add(enemyBulletPatternData.id, enemyBulletPatternData);
+        }
 
         //EnemyBossPhaseActionData들을 읽어와서 딕셔너리 enemyBossPhaseActionTable에 저장하기
+        /*
         TextAsset[] jsonFiles3 = Resources.LoadAll<TextAsset>("EnemyBossPhaseActionData");
         foreach(TextAsset jsonFile3 in jsonFiles3)
         {
            EnemyBossPhaseActionData enemyBossPhaseActionData = JsonUtility.FromJson<EnemyBossPhaseActionData>(jsonFile3.text);
+
+            if(enemyBulletPatternTable.ContainsKey(enemyBossPhaseActionData.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            enemyBossPhaseActionTable.Add(enemyBossPhaseActionData.id, enemyBossPhaseActionData);
+        }
+        */
+        string folderPath3 = Path.Combine(Application.streamingAssetsPath, "EnemyBossPhaseActionData");
+
+        string[] jsonFiles3 = Directory.GetFiles(folderPath3, "*.json");
+
+        foreach(string jsonFilePath in jsonFiles3)
+        {
+            string jsonText = File.ReadAllText(jsonFilePath);
+
+            EnemyBossPhaseActionData enemyBossPhaseActionData = JsonUtility.FromJson<EnemyBossPhaseActionData>(jsonText);
 
             if(enemyBulletPatternTable.ContainsKey(enemyBossPhaseActionData.id))
             {
@@ -137,6 +195,7 @@ public class DataManager : MonoBehaviour
     //Json 파일에서 playerData 값을 모두 읽어와서 Dictionary에 저장하는 함수
     private void LoadAllPlayerJsonFiles()
     {
+        /*
         TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("PlayerData");
         foreach(TextAsset jsonFile in jsonFiles)
         {
@@ -149,14 +208,45 @@ public class DataManager : MonoBehaviour
             }
             playerTable.Add(playerData.id, playerData);
         }
+        */
+        string folderPath = Path.Combine(Application.streamingAssetsPath, "PlayerData");
+
+        string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+
+        foreach(string jsonFilePath in jsonFiles)
+        {
+            string jsonText = File.ReadAllText(jsonFilePath);
+
+            PlayerData playerData = JsonUtility.FromJson<PlayerData>(jsonText);
+
+            if(playerTable.ContainsKey(playerData.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            playerTable.Add(playerData.id, playerData);
+        }
     }
     //Json 파일에서 waveData 값을 모두 읽어와서 List에 저장하는 함수 
     private void LoadAllWaveJsonFiles()
     {
+        /*
         TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("WaveData");
         foreach(TextAsset jsonFile in jsonFiles)
         {
             WaveData waveData = JsonUtility.FromJson<WaveData>(jsonFile.text);
+            waveList.Add(waveData);
+        }
+        */
+        string folderPath = Path.Combine(Application.streamingAssetsPath, "WaveData");
+
+        string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+
+        foreach(string jsonFilePath in jsonFiles)
+        {
+            string jsonText = File.ReadAllText(jsonFilePath);
+
+            WaveData waveData = JsonUtility.FromJson<WaveData>(jsonText);
             waveList.Add(waveData);
         }
     }
@@ -183,10 +273,29 @@ public class DataManager : MonoBehaviour
     //Json 파일에서 movementData 값들을 모두 읽어와서 Dictionary에 저장하는 함수 
     private void LoadAllMovementPatternJsonFiles()
     {
+        /*
         TextAsset[] jsonFiles = Resources.LoadAll<TextAsset>("MovementPatternData");
         foreach(TextAsset jsonFile in jsonFiles)
         {
             MovementPatternData data = JsonUtility.FromJson<MovementPatternData>(jsonFile.text);
+
+            if(movementPatternTable.ContainsKey(data.id))
+            {
+                Debug.Log("Error: multiple key values");
+                continue;
+            }
+            movementPatternTable.Add(data.id, data);
+        }
+        */
+        string folderPath = Path.Combine(Application.streamingAssetsPath, "MovementPatternData");
+
+        string[] jsonFiles = Directory.GetFiles(folderPath, "*.json");
+
+        foreach(string jsonFilePath in jsonFiles)
+        {
+            string jsonText = File.ReadAllText(jsonFilePath);
+
+            MovementPatternData data = JsonUtility.FromJson<MovementPatternData>(jsonText);
 
             if(movementPatternTable.ContainsKey(data.id))
             {

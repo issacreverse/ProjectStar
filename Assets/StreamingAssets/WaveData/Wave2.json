@@ -9,7 +9,9 @@
             "count": 5,
             "startDelay": 0,
             "spawnInterval": 0.7,
-            "spawnPoint": "BottomOutside"   
+            "spawnPoint": "BottomOutside",
+            "spawnPosOffsetY": 4,
+            "spawnPosOffsetX": 7
         }
     ]
 }
