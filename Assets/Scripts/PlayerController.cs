@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private PlayerData playerData;
 
     //Input System Package 
+    [SerializeField] private InputActionAsset inputActions;
     InputAction moveAction;
     InputAction attackAction;
     InputAction slowMoveAction;
@@ -35,17 +36,34 @@ public class PlayerController : MonoBehaviour
     public float minX = -9f;
     public float maxY = 5f;
     public float minY = -5f;
+    
+    void Awake()
+    {
+        //InputSystem 연결하기
+        moveAction = inputActions.FindAction("Move", true);
+        attackAction = inputActions.FindAction("Attack", true);    
+        slowMoveAction = inputActions.FindAction("SlowMove", true);
+    }
+    private void OnEnable()
+    {
+        moveAction.Enable();
+        attackAction.Enable();
+        slowMoveAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        moveAction.Disable();
+        attackAction.Disable();
+        slowMoveAction.Disable();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         //플레이어 정보 받아오기 
         playerData = DataManager.Instance.GetPlayerData(playerId);
-
-        //InputSystem 연결하기
-        moveAction = InputSystem.actions.FindAction("Move");
-        attackAction = InputSystem.actions.FindAction("Attack");    
-        slowMoveAction = InputSystem.actions.FindAction("SlowMove");
+        
         attackTimer = 0f;
     }
 
@@ -54,10 +72,10 @@ public class PlayerController : MonoBehaviour
     {
         //이동
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
-        float slowMoveValue = slowMoveAction.ReadValue<float>();
+        bool isSlowMove = slowMoveAction.IsPressed();
 
         float playerMoveSpeed = moveSpeed;
-        if(slowMoveValue != 0)
+        if(isSlowMove)
             playerMoveSpeed= slowMoveSpeed;
 
         transform.Translate(moveValue * playerMoveSpeed * Time.deltaTime);
@@ -71,8 +89,8 @@ public class PlayerController : MonoBehaviour
 
         
         //공격 
-        float attackValue = attackAction.ReadValue<float>(); 
-        if(attackValue != 0)
+        bool isAttack = attackAction.IsPressed();
+        if(isAttack)
         {
             attackTimer += Time.deltaTime;
             float attackInterval = 1f / attackPerSec;
