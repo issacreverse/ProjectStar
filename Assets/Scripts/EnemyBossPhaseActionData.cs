@@ -51,18 +51,28 @@ public class PhaseCondition
 public enum PhaseActionType
 {
     None,
-    ChangeBulletPattern,    //탄알 패턴 변경
-    ChangeMovementPattern,      //이동 패턴 변경
-    ChangeField             //체력, 이동 속도 등 적 상태 변경
+    ChangeBulletPattern,          //탄알 패턴 변경
+    ChangeMovementPattern,        //이동 패턴 변경
+    ChangeField                   //체력, 이동 속도 등 적 상태 변경
+}
+
+//ChangeField 타입의 변경 필드 종류
+public enum ChangeFieldType
+{
+    None, 
+    ChangeMoveSpeed,              //이동 속도 변경
+    ChangeHitPoints,              //체력 변경
+    ChangeTouchDamage             //접촉 데미지 변경 
 }
 public class PhaseAction
 {
     PhaseActionType type;
     string bulletPatternId;             //이 코드 좀 구린 듯. 여기에 저장하지 말 걸. 초기화도 굳이 굳이 필요없는데.
     string movementPatternId;
+    string changeFieldType;
     float value; 
 
-    public PhaseAction(string _type, string _bulletPatternId, string _movementPatternId, float _value)
+    public PhaseAction(string _type, string _bulletPatternId, string _movementPatternId, string _changeFieldType, float _value)
     {
         if(Enum.TryParse(_type, out PhaseActionType type))
         {
@@ -74,6 +84,7 @@ public class PhaseAction
         }
         bulletPatternId = _bulletPatternId;
         movementPatternId = _movementPatternId;
+        changeFieldType = _changeFieldType;
         value = _value;
     }
     public void DoAction(EnemyBossAttackController _this)
@@ -89,7 +100,7 @@ public class PhaseAction
                 _this.enemyController.SetMovementPattern(movementPatternId);
                 break;
             case PhaseActionType.ChangeField:
-                //이것도 어떤 필드 바뀔 건지 enum 타입 만들고 json 형식도 바꾸고...엉엉 
+                _this.enemyController.SetField(changeFieldType, value);
                 break;
         }
     }
@@ -146,6 +157,8 @@ public class PhaseActionData
     public string bulletPatternId = "none";                 //페이즈 행동 중 탄알 패턴 변화 시 바뀔 탄알 패턴 id
 
     public string movementPatternId = "none";               //페이즈 행동 중 이동 패턴 변화 시 바뀔 이동 패턴 id
+
+    public string changeFieldType = "none";                 //페이즈 행동 중 필드 값 변화 시 바뀔 필드 타입 
 
     public float value = 0f;                                //페이즈 행동에 쓰이는 값
 }

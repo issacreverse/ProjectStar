@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.InputSystem;
 
 public class EnemyController : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class EnemyController : MonoBehaviour
     //적의 체력, 상태 판정 같은 필드 정보들은 같은 오브젝트 아래에 있는 EnemyField 스크립트에서 제어합니다.
     //Id 정보는 이 스크립트에 저장되어있으며: 추후 스폰 시스템이 제어하겠지만
     //다른 스크립트들은 이 스크립트에서 GetEnemyId 함수를 통해 Id를 가져오되 Data는 DataManager에서 직접 가져옵니다. (호출 순서 문제 때문)
+
+
+    //상수 값
+    private const float TOUCH_DAMAGE_COOLTIME = 1f;
 
     //적 정보 
     [SerializeField] protected string enemyId = "Enemy1";
@@ -33,8 +38,9 @@ public class EnemyController : MonoBehaviour
     private EnemyBulletPatternData bulletPatternData;
 
     //적 충돌 정보: 몇 초마다 충돌 처리 할 건지
-    private float touchDamageCoolTime = 1f;
-    private bool istouchDamageReady = true;
+    private float touchDamageCoolTime = TOUCH_DAMAGE_COOLTIME;
+    private bool istouchDamageReady;
+    private float touchDamage;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -47,6 +53,9 @@ public class EnemyController : MonoBehaviour
         }
         //적 속성 값 내려받기
         data = DataManager.Instance.GetEnemyData(enemyId);
+
+        istouchDamageReady = true;
+        touchDamage = data.touchDamage;
 
         //패턴 속성 값 내려받기 
         GetPatternDataFromManager();
@@ -94,7 +103,32 @@ public class EnemyController : MonoBehaviour
         }
         StartMovement();
     }
-    
+    //필드 변경 패턴이 있는 보스만 호출
+    public void SetField(string changeFieldType, float value)
+    {
+        if(Enum.TryParse<ChangeFieldType>(changeFieldType, out ChangeFieldType type))
+        {
+            switch(type)
+            {
+                case ChangeFieldType.ChangeMoveSpeed:
+                    stepObj.ChangeMoveSpeed(value);
+                    break;
+                case ChangeFieldType.ChangeHitPoints:
+                    gameObject.GetComponent<EnemyField>().ChangeHitPoints(value);
+                    break;
+                case ChangeFieldType.ChangeTouchDamage:
+                    touchDamage = value;
+                    break;
+                default: 
+                    break;
+            }
+        }
+        else
+        {
+            Debug.Log("Error: Failed to parse to Enum type ChangeFieldType");
+        }
+
+    }
     //현재 movementPatternData에 들어있는 이동 패턴을 실행합니다. movementPatternData 객체를 생성합니다.
     private void StartMovement()
     {   

@@ -44,6 +44,18 @@ public class EnemyField : MonoBehaviour
         WaveManager.Instance.RemoveEnemyFromList(_enemyController);
         Destroy(gameObject);
     }
+    //특정 값으로 체력이 변합니다. 
+    public void ChangeHitPoints(float value)
+    {   
+        if(hitPoints + value >= hitPointsMax)
+        {
+            hitPoints = hitPointsMax;
+        }
+        else
+        {
+            hitPoints += value;
+        }
+    }
     //체력값을 반환한다. 
     public float GetHitPoints()
     {

@@ -9,8 +9,8 @@
     [
         {
             "type": "ChangeField",
-            "bulletPatternId": "none",
-            "value": 1.3
+            "changeFieldType": "ChangeMoveSpeed",
+            "value": 3
         }
     ]
 }

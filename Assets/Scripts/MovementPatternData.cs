@@ -343,6 +343,10 @@ public class EnemyMovementStep
         }
         e.NextMovement();
     }
+    public void ChangeMoveSpeed(float value)
+    {
+        data.speed = value;
+    }
     #endregion
 
     #region movementType Functions()

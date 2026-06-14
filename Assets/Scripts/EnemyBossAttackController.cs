@@ -53,7 +53,7 @@ public class EnemyBossAttackController : EnemyAttackController
             int idx = 0;
             foreach(var action in data.actions)
             {
-                PhaseAction o2 = new PhaseAction(action.type, action.bulletPatternId, action.movementPatternId, action.value);
+                PhaseAction o2 = new PhaseAction(action.type, action.bulletPatternId, action.movementPatternId, action.changeFieldType, action.value);
                 o2s[idx++] = o2;
             }
             ConditionActionObject obj = new ConditionActionObject(o1, o2s);
