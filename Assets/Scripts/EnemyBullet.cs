@@ -11,12 +11,16 @@ public class EnemyBullet : MonoBehaviour
     private float speed;
     private float damage;
 
+    //중복 풀링 해제 방어 변수
+    private bool isReleased;
+
     //탄알 속성 초기화. EnemyAttackController에서 호출함. 
     public void Initialize(Vector2 _direction, float _speed, float _damage)
     {
         direction = _direction;
         speed = _speed;
         damage = _damage;
+        isReleased = false;
     }
     
     void Update()
@@ -27,15 +31,20 @@ public class EnemyBullet : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if(isReleased)
+            return; 
         if(other.gameObject.CompareTag("Player"))
-        {
-            PlayerField _playerField = other.gameObject.GetComponent<PlayerField>();
-            _playerField.TakeDamage(damage);
+        {   
+            isReleased = true; 
+
+            PlayerCharacterBase player = other.gameObject.GetComponent<PlayerCharacterBase>();
+            player.TakeDamage(damage);
 
             PoolingManager.Instance.objectPool.Release(this);
         }
         else if(other.gameObject.CompareTag("BulletBoundary"))
         {
+            isReleased = true;
             PoolingManager.Instance.objectPool.Release(this);
         }
     }

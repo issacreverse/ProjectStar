@@ -1,0 +1,8 @@
+Character 생성 방법
+1. Character_[이름] 스크립트를 만든다. 이 클래스는 PlayerCharacterBase 클래스를 상속한다. 
+2. sprite 2D를 만든다. 이게 본체가 될 거다.
+2-1. 자식 오브젝트로 빈오브젝트 shootPos를 만든다. x값은 0.65로 디폴트 설정한다. 
+3. 태그를 Player, 레이어를 Player로 설정한다. 
+4. Sprite Renderer에 필요한 이미지를 넣는다.  
+5. Character_[이름] 스크립트 컴포넌트를 넣는다. 필요한 값이나 프리팹을 전부 넣는다.
+ 

@@ -1,6 +1,6 @@
 {
     "id": "Player1",
-    "hitPoints": 300,
+    "hitPoints": 100000,
     "moveSpeed": 7,
     "bulletDamage": 5
 }

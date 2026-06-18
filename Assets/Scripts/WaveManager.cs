@@ -16,8 +16,7 @@ public class WaveManager : MonoBehaviour
     private WaveData currentWaveData;                               //현재 웨이브 정보 
     private int currentWaveIdx;                                     //현재 웨이브 번호. waveDataList 탐색할 때 활용.
 
-    private int totalActiveEnemyNum;                                //현재 씬에 살아있는 오브젝트 수. 여러 웨이브 밀리더라도 총 오브젝트 수가 0이면 스테이지 클리어 검사에 활용 가능. 
-    private List<EnemyController> currentWaveActiveEnemyList;       //현재 진행 중인 웨이브에서 살아있는 오브젝트 리스트. 스폰하면 추가하고 죽으면 빼는 방식. 
+    private List<EnemyController> currentActiveEnemyList;           //현재 살아있는 오브젝트 리스트. 스폰하면 추가하고 죽으면 빼는 방식. 
     private bool isWaveSpawnStart;                                  //현재 웨이브 스폰 시작 했는지. Update문에서 중복 시작 방지용.
     private bool isWaveSpawnEnd;                                    //현재 웨이브에서 모든 오브젝트를 스폰완료 했는지. 완료한 시점부터 모든 적 죽였는지 검사 가능.
 
@@ -66,13 +65,14 @@ public class WaveManager : MonoBehaviour
         }
 
         //필드 초기화
-        totalActiveEnemyNum = 0;
         isWaveSpawnStart = false;
         isWaveSpawnEnd = true;
 
         tempEnemyGroupCount = 0;
 
         nextWaveDelayTimer = 0f;
+
+        currentActiveEnemyList = new List<EnemyController>();
     }
     void Update()
     {
@@ -82,7 +82,7 @@ public class WaveManager : MonoBehaviour
         {
             isWaveSpawnStart = true;
             isWaveSpawnEnd = false;
-            currentWaveActiveEnemyList = new List<EnemyController>();
+            
             StartCoroutine(StartWave(currentWaveData));
             tempEnemyGroupCount = currentWaveData.spawnGroups.Length;
         }
@@ -275,8 +275,7 @@ public class WaveManager : MonoBehaviour
             var enemy = Instantiate(enemyObj, spawnPos, Quaternion.identity);   
 
             //현재 화면 정보 값들 업데이트 
-            totalActiveEnemyNum++;
-            currentWaveActiveEnemyList.Add(enemy.GetComponent<EnemyController>());
+            currentActiveEnemyList.Add(enemy.GetComponent<EnemyController>());
             //특정 시간 텀을 두기
             yield return new WaitForSeconds(groupData.spawnInterval);
         }
@@ -290,7 +289,7 @@ public class WaveManager : MonoBehaviour
             return true;
         
         //웨이브 스폰 끝난 후 해당 웨이브를 포함한 화면 내 모든 적을 처치하면 다음 웨이브 실행.
-        if(currentWaveActiveEnemyList.Count <= 0 && totalActiveEnemyNum <= 0)
+        if(currentActiveEnemyList.Count <= 0)
             return true;
         
         return false;
@@ -298,14 +297,17 @@ public class WaveManager : MonoBehaviour
     
     public void RemoveEnemyFromList(EnemyController e)
     {
-        if(currentWaveActiveEnemyList.Contains(e))
+        if(currentActiveEnemyList.Contains(e))
         {
-            currentWaveActiveEnemyList.Remove(e);
-            totalActiveEnemyNum--;
+            currentActiveEnemyList.Remove(e);
         }
         else
         {
-            Debug.Log($"Error: Can't find enemy in currentWaveActiveEnemyList.");
+            Debug.Log($"Error: Can't find enemy in currentActiveEnemyList.");
         }
+    }
+    public List<EnemyController> GetActiveEnemyList()
+    {
+        return currentActiveEnemyList;
     }
 }

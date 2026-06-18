@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System;
-using UnityEngine.InputSystem;
 
 public class EnemyController : MonoBehaviour
 {
@@ -168,6 +167,10 @@ public class EnemyController : MonoBehaviour
                 StartCoroutine(ApplyTouchDamage());
             }
         }
+        if(other.gameObject.CompareTag("BulletBoundary"))
+        {
+            gameObject.GetComponent<EnemyField>().Die();
+        }
     }
     private void OnTriggerStay2D(Collider2D other)
     {
@@ -183,7 +186,7 @@ public class EnemyController : MonoBehaviour
     public IEnumerator ApplyTouchDamage()
     {
         istouchDamageReady = false;
-        player.GetComponent<PlayerField>().TakeDamage(data.touchDamage);
+        player.GetComponent<PlayerCharacterBase>().TakeDamage(data.touchDamage);
         if(data.destroyWhenTouch)
         {
             gameObject.GetComponent<EnemyField>().Die();

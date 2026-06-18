@@ -1,16 +1,44 @@
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    bool flag = true;
+    //싱글톤 초기화 
+    public static GameManager Instance;
+
+    //임시
+    [SerializeField] GameObject player;
+    [SerializeField] GameObject prefab;
+    [SerializeField] Transform characterRoot;
+    //외부 참조
+    [SerializeField] private InputActionAsset inputActions;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Update()
+    void Awake()
     {
-        if(flag)
+        //싱글톤 초기화
+        if(Instance == null)
         {
-            WaveManager.Instance.StartWaveManager();
-            flag = false;
+            Instance = this;
         }
+        DontDestroyOnLoad(gameObject);
+    }
+    void Start()
+    {
+        GameObject go = Instantiate(prefab, characterRoot.position, Quaternion.identity);
+        go.SetActive(false);
+        PlayerPartyManager.Instance.AddCharacter(go);
+        player.GetComponent<PlayerController>().SwitchPlayerCharacter(1);
+        WaveManager.Instance.StartWaveManager();
+    }
+
+    //공개 함수
+    public InputActionAsset GetInputActionAsset()
+    {
+        if(inputActions == null)
+        {
+            Debug.Log("Error: InputActionAsset is null");
+        }
+        return inputActions;
     }
 }

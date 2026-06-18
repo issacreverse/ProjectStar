@@ -1,0 +1,30 @@
+{
+  "id": "Movement5",
+  "steps": [
+    {
+      "type": "DashToPlayer",
+      "finishCondition": "Never",
+      "arriveDistance": 0.1,
+      "screenMargin": 0.0,
+      "duration": 0.0,
+      "delay": 2.0,
+      "speed": 8.0,
+      "angle": 0.0,
+      "targetX": 5.5,
+      "targetY": 0.0,
+      "targetMode": "World",
+      "amplitude": 0.0,
+      "frequency": 0.0,
+      "phase": 0.0,
+      "radius": 0.0,
+      "angularSpeed": 0.0,
+      "controlX": 0.0,
+      "controlY": 0.0,
+      "acceleration": 0.0,
+      "maxSpeed": 0.0,
+      "easeType": "EaseOut",
+      "faceMoveDirection": false,
+      "destroyWhenFinished": false
+    }
+  ]
+}

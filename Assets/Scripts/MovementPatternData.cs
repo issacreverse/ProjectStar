@@ -141,8 +141,7 @@ public class EnemyMovementStep
         e = _e;
         data = _data;
         transform = _e.transform;
-        if(player != null)
-            player = _e.player.transform;
+        player = _e.player.transform;
         lastMoveDirection = Vector3.left;
         spawnPosition = transform.position;
 
@@ -495,7 +494,10 @@ public class EnemyMovementStep
         {
             direction = (player.position - transform.position).normalized;
         }
-
+        else
+        {
+            Debug.Log("12345");
+        }
         while (!IsFinished())
         {
             transform.position += direction * data.speed * Time.deltaTime;

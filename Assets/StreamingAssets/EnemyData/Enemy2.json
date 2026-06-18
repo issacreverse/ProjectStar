@@ -3,5 +3,5 @@
     "hitPoints": 80,
     "touchDamage": 30,
     "bulletPatternId": "AimType1",
-    "movementPatternId": "Movement3"
+    "movementPatternId": "Movement5"
 }

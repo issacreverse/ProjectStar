@@ -48,13 +48,13 @@ public class EnemyAttackController : MonoBehaviour
     {
         switch(_data.bulletForm)
         {
-            case BulletForm.Aim:
+            case EnemyBulletForm.Aim:
                 FireAim(_data);
                 break;
-            case BulletForm.Circle:
+            case EnemyBulletForm.Circle:
                 FireCircle(_data);
                 break;
-            case BulletForm.Fan:
+            case EnemyBulletForm.Fan:
                 FireFan(_data);
                 break;
             default: 

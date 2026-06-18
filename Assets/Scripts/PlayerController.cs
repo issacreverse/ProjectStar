@@ -1,84 +1,107 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Pool;
 
 public class PlayerController : MonoBehaviour
 {
     //플레이어의 이동과 공격을 제어하는 스크립트 
     //Player 레이어의 Physics2D Collision Matrix: EnemyBullet 하고만 충돌 
-    //플레이어의 체력, 상태 판정 같은 필드 정보들은 같은 오브젝트 아래에 있는 PlayerField 스크립트에서 제어합니다.
-    //Id 정보는 이 스크립트에 저장되어있으며: 추후 스폰 시스템이 제어하겠지만
-    //다른 스크립트들은 이 스크립트에서 GetPlayerId 함수를 통해 Id를 가져오되 Data는 DataManager에서 직접 가져옵니다. (호출 순서 문제 때문)
-    
-    //플레이어 정보
-    [SerializeField] private string playerId = "Player1";
-    //이동 관련 필드
-    public float moveSpeed = 5.0f; 
-    public float slowMoveSpeed = 3f;            //정밀 이동 키 누른 상태로 이동했을 때의 속도 
-    //공격 관련 필드
-    public float attackPerSec = 10f;            //초당 공격 횟수 
-    private float attackTimer;  
-
-    [SerializeField] private GameObject bullet;
-    [SerializeField] private Transform firePos;
-
+    //플레이어의 체력, 상태 판정 같은 필드 정보들은 같은 오브젝트 아래에 있는 PlayerField 스크립트에서 제어합니다. -> 이제 PlayerField 안 쓴다.
+    //다른 스크립트들은 이 스크립트에서 GetPlayerId 함수를 통해 Id를 가져오되 Data는 DataManager에서 직접 가져옵니다. (호출 순서 문제 때문) -> 이제 안 한다.
     //받아온 플레이어 정보
-    private PlayerData playerData;
+    //private PlayerData playerData;
 
+
+    //내부 필드
+    private PlayerCharacterBase currentPlayerCharacter;
+    private float moveSpeed;
+    private float slowMoveSpeed;     
+    
     //Input System Package 
-    [SerializeField] private InputActionAsset inputActions;
-    InputAction moveAction;
-    InputAction attackAction;
-    InputAction slowMoveAction;
+    private InputActionAsset inputActions;
+    private InputAction moveAction;
+    private InputAction slowMoveAction;
+    private InputAction baseAttackAction;
+    private InputAction subAttackAction;
+    private InputAction skillAction;
+    private InputAction ultimateAction;
+    private InputAction switchAction1;
+    private InputAction switchAction2;
+    private InputAction switchAction3;
+
+    private bool isActionsReady;    //내부 플래그. 필요한 이유는 Awake에 있던 걸 Start로 옮겼기 때문에 OnEnable에서 호출하는 것과의 문제가 생겼기 때문. (+GameManager 싱글톤)
+    
 
     //플레이어 이동 제한 가로 세로 폭
     public float maxX = 9f;
     public float minX = -9f;
     public float maxY = 5f;
     public float minY = -5f;
-    
+
     void Awake()
     {
+        isActionsReady = false;
+        DontDestroyOnLoad(gameObject);
+    }
+    void Start()
+    {
         //InputSystem 연결하기
+        inputActions = GameManager.Instance.GetInputActionAsset();
+
+        if(inputActions == null)
+            return;
+            
         moveAction = inputActions.FindAction("Move", true);
-        attackAction = inputActions.FindAction("Attack", true);    
         slowMoveAction = inputActions.FindAction("SlowMove", true);
+        baseAttackAction = inputActions.FindAction("BaseAttack", true);   
+        subAttackAction = inputActions.FindAction("SubAttack", true); 
+        skillAction = inputActions.FindAction("Skill", true); 
+        ultimateAction = inputActions.FindAction("Ultimate", true); 
+        switchAction1 = inputActions.FindAction("Switch1", true); 
+        switchAction2 = inputActions.FindAction("Switch2", true); 
+        switchAction3 = inputActions.FindAction("Switch3", true); 
+
+        isActionsReady = true;
+
+        EnableActions();
     }
     private void OnEnable()
     {
-        moveAction.Enable();
-        attackAction.Enable();
-        slowMoveAction.Enable();
+        if(!isActionsReady)
+            return;
+        EnableActions();
     }
 
     private void OnDisable()
     {
-        moveAction.Disable();
-        attackAction.Disable();
-        slowMoveAction.Disable();
+        DisableActions();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void SwitchPlayerCharacter(int characterNum)
     {
-        //플레이어 정보 받아오기 
-        playerData = DataManager.Instance.GetPlayerData(playerId);
-        
-        attackTimer = 0f;
+        PlayerPartyManager.Instance.SwitchCharacter(characterNum);
+        //초기화 다시 진행
+        GameObject currentPlayerObject = PlayerPartyManager.Instance.GetCurrentPlayerCharacter();
+        currentPlayerCharacter = currentPlayerObject.GetComponent<PlayerCharacterBase>();
+
+        moveSpeed = currentPlayerCharacter.MoveSpeed;
+        slowMoveSpeed = currentPlayerCharacter.SlowMoveSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //플레이어 입력 처리 함수
+        //이동, 공격, 스킬, 궁극기, 스위치 등의 입력을 처리한다.
+
         //이동
         Vector2 moveValue = moveAction.ReadValue<Vector2>();
         bool isSlowMove = slowMoveAction.IsPressed();
 
-        float playerMoveSpeed = moveSpeed;
+        float currentMoveSpeed = moveSpeed;
         if(isSlowMove)
-            playerMoveSpeed= slowMoveSpeed;
+            currentMoveSpeed= slowMoveSpeed;
 
-        transform.Translate(moveValue * playerMoveSpeed * Time.deltaTime);
+        transform.Translate(moveValue * currentMoveSpeed * Time.deltaTime);
 
         //플레이어가 화면 밖으로 나가지 못하도록 위치를 강제조정한다. 
         Vector3 pos = transform.position;
@@ -88,34 +111,70 @@ public class PlayerController : MonoBehaviour
         transform.position = pos;
 
         
-        //공격 
-        bool isAttack = attackAction.IsPressed();
-        if(isAttack)
+        //플레이어 키 
+        //기본 공격이 자동으로 나가는 게 디폴트지만 
+        //나중에 다른 방식의 캐릭터가 나올 수도 있음. 
+        /*
+        if(baseAttackAction.IsPressed())
         {
-            attackTimer += Time.deltaTime;
-            float attackInterval = 1f / attackPerSec;
+            currentPlayerCharacter.TryBaseAttack();
+        }
+        */
+        currentPlayerCharacter.TryBaseAttack();
 
-            //공격 주기가 돌았다
-            if(attackTimer >= attackInterval)   
-            {
-                attackTimer = 0f;
-                //Debug.Log("Attack!");
-                if(PoolingManager.Instance == null)
-                {
-                    Debug.Log("PoolingManager is null");
-                }
-                else if(PoolingManager.Instance.objectPool == null)
-                {
-                    Debug.Log("objectPool is null");
-                }
-                GameObject bulletObject = Instantiate(bullet);
-                bulletObject.GetComponent<Bullet>().Initialize(playerData.bulletDamage); //비용이 많아보인다면 맞음. 어차피 로직 enemy처럼 바꿀거라 괜춘.
-                bulletObject.transform.position = firePos.position;
-            }
-        } 
+        if(subAttackAction.IsPressed())
+        {
+            currentPlayerCharacter.TrySubAttack();
+        }
+        if(skillAction.IsPressed())
+        {
+            currentPlayerCharacter.TrySkill();
+        }
+        if(ultimateAction.IsPressed())
+        {
+            currentPlayerCharacter.TryUltimate();
+        }
+        if(switchAction1.IsPressed())
+        {
+            //첫번째 캐릭터를 사용 중이 아니라면
+            //PlayerParty에서 첫번째 캐릭터를 가져온다. 
+            SwitchPlayerCharacter(1);
+        }
+        if(switchAction2.IsPressed())
+        {
+            //두번째 캐릭터를 사용 중이 아니라면
+            //PlayerParty에서 두번째 캐릭터를 가져온다. 
+            SwitchPlayerCharacter(2);
+        }
+        if(switchAction3.IsPressed())
+        {
+            //세번째 캐릭터를 사용 중이 아니라면
+            //PlayerParty에서 세번째 캐릭터를 가져온다. 
+            SwitchPlayerCharacter(3);
+        }
     }
-    public string GetPlayerId()
+    private void EnableActions()
     {
-        return playerId;
+        moveAction.Enable();
+        slowMoveAction.Enable();
+        baseAttackAction.Enable();
+        subAttackAction.Enable();
+        skillAction.Enable();
+        ultimateAction.Enable();
+        switchAction1.Enable();
+        switchAction2.Enable();
+        switchAction3.Enable();
+    }
+    private void DisableActions()
+    {
+        moveAction.Disable();
+        slowMoveAction.Disable();
+        baseAttackAction.Disable();
+        subAttackAction.Disable();
+        skillAction.Disable();
+        ultimateAction.Disable();
+        switchAction1.Disable();
+        switchAction2.Disable();
+        switchAction3.Disable();
     }
 }

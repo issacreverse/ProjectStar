@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 
 //적의 탄알 패턴에 대한 정보를 담고 있는 타입. Json 형태로 저장하고 게임에서 불러온다. 
-public enum BulletForm
+public enum EnemyBulletForm
 {
     Aim = 0,                                //조준형. 초탄발사 시 플레이어 위치로 전탄 발사
     Circle = 1,                             //원형
@@ -13,7 +13,7 @@ public class EnemyBulletPatternData
 {
     public string id = "none";              //탄알 패턴 고유 id. 
 
-    public BulletForm bulletForm = 0;       //공격 형태
+    public EnemyBulletForm bulletForm = 0;       //공격 형태
 
     public float bulletSpeed = 0;           //탄속
     public float bulletDamage = 0;          //탄알 1개당 데미지
