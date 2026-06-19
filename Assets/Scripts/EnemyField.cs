@@ -37,6 +37,7 @@ public class EnemyField : MonoBehaviour
     public void TakeDamage(float damage)
     {
         hitPoints -= damage;
+        print(hitPoints);
     }
     //죽을 때 호출됩니다. 
     public void Die()

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7544499790835846784}
   - component: {fileID: 1650731806973718520}
   - component: {fileID: -2607176026351786700}
-  - component: {fileID: 6440739215238734366}
+  - component: {fileID: -8017365523455287275}
   m_Layer: 8
   m_Name: Seraphin_SubAttack
   m_TagString: Bullet
@@ -157,7 +157,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6440739215238734366
+--- !u!114 &-8017365523455287275
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -166,6 +166,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4633612872174869941}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ec8ee00a4913904fa22ac004d6e754a, type: 3}
+  m_Script: {fileID: 11500000, guid: dd12a9aff1a71674c8fe4651e37d9fd5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Bullet
+  m_EditorClassIdentifier: Assembly-CSharp::Seraphin_Mark
+  bulletType: 1
+  bulletDamage: 0

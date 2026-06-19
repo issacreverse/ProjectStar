@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -19,9 +20,9 @@ public class Bullet : MonoBehaviour
 
     //공통 필드
     private BulletForm bulletForm;
-    private ElementType bulletType;
+    [NonSerialized] public ElementType bulletType;
     private float bulletSpeed;
-    private float bulletDamage;
+    [NonSerialized] public float bulletDamage;
     private Vector3 moveDirection = Vector3.right;
 
     //HomingWiggleMissile 필드
@@ -50,7 +51,7 @@ public class Bullet : MonoBehaviour
         }
     }
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         switch(bulletForm)
         {
@@ -64,7 +65,9 @@ public class Bullet : MonoBehaviour
         
     }
     //충돌 판정 
-    void OnTriggerEnter2D(Collider2D other)
+    //다른 종류의 탄알들은 충돌 처리 방식이 다른 경우도 있기에 
+    //상속 가능하도록 선언했다.
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         //적과 충돌하면 데미지를 준다. 
         if(other.gameObject.CompareTag("Enemy"))

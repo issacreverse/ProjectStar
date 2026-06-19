@@ -9,7 +9,7 @@ TagManager:
   - EnemyBullet
   - BulletBoundary
   - PlayerBoundary
-  - Shield
+  - EnemyBulletBlock
   layers:
   - Default
   - TransparentFX
@@ -22,7 +22,7 @@ TagManager:
   - Bullet
   - EnemyBullet
   - Enemy
-  - Shield
+  - EnemyBulletBlock
   - 
   - 
   - 

@@ -79,7 +79,7 @@ public class Character_Seraphin : PlayerCharacterBase
         //공격력 8
         //쿨타임 8초
 
-        ShootBullet(subAttackPrefab, shootingPos.position, BulletForm.Normal, ElementType.Plain, subAttackDamage, subAttackBulletSpeed);
+        ShootBullet(subAttackPrefab, shootingPos.position, BulletForm.Normal, ElementType.Light, subAttackDamage, subAttackBulletSpeed);
     }
     protected override void Skill()
     {
