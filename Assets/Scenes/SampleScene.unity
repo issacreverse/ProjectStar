@@ -1255,7 +1255,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   player: {fileID: 1458313127}
-  prefab: {fileID: 4847770771838137552, guid: dbde52e278dbe594f8ff4c20bbe2ece3, type: 3}
+  prefab:
+  - {fileID: 4847770771838137552, guid: dbde52e278dbe594f8ff4c20bbe2ece3, type: 3}
+  - {fileID: 8572981773633222950, guid: f7fec9f58d0fa274aa384f50b8f96730, type: 3}
   characterRoot: {fileID: 2050056203}
   inputActions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!4 &1925120763

@@ -42,7 +42,6 @@ public class EnemyField : MonoBehaviour
     public void Die()
     {
         WaveManager.Instance.RemoveEnemyFromList(_enemyController);
-        Debug.Log("40");
         Destroy(gameObject);
     }
     //특정 값으로 체력이 변합니다. 

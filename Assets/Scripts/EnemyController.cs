@@ -186,7 +186,7 @@ public class EnemyController : MonoBehaviour
     public IEnumerator ApplyTouchDamage()
     {
         istouchDamageReady = false;
-        player.GetComponent<PlayerCharacterBase>().TakeDamage(data.touchDamage);
+        player.GetComponentInChildren<PlayerCharacterBase>().TakeDamage(data.touchDamage);
         if(data.destroyWhenTouch)
         {
             gameObject.GetComponent<EnemyField>().Die();

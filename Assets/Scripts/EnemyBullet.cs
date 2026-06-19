@@ -37,7 +37,7 @@ public class EnemyBullet : MonoBehaviour
         {   
             isReleased = true; 
 
-            PlayerCharacterBase player = other.gameObject.GetComponent<PlayerCharacterBase>();
+            PlayerCharacterBase player = other.gameObject.GetComponentInChildren<PlayerCharacterBase>();
             player.TakeDamage(damage);
 
             PoolingManager.Instance.objectPool.Release(this);
@@ -47,5 +47,10 @@ public class EnemyBullet : MonoBehaviour
             isReleased = true;
             PoolingManager.Instance.objectPool.Release(this);
         }
+    }
+    public void Release()
+    {
+        isReleased = true;
+        PoolingManager.Instance.objectPool.Release(this);
     }
 }

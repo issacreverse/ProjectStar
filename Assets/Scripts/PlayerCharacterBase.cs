@@ -15,7 +15,7 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     protected abstract float ReviveCoolDown {get;}
 
     protected abstract float BaseAttackCoolDown {get;}
-    protected abstract float SubAtatckCoolDown {get;}
+    protected abstract float SubAttackCoolDown {get;}
     protected abstract float SkillCoolDown {get;}
     protected abstract float UltimateCoolDown {get;}
 
@@ -40,6 +40,7 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     //상속 함수
     protected virtual void Awake()
     {
+        currentHitPoints = MaxHitPoints;
         isCharacterDown = false;
         baseAttackTimer = 0f;
         subAttackTimer = 0f;
@@ -113,7 +114,6 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     {
         if(baseAttackTimer > 0f)
             return;
-    
         BaseAttack();
         baseAttackTimer = BaseAttackCoolDown;
     }
@@ -121,9 +121,8 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     {
         if(subAttackTimer > 0f)
             return;
-        
         SubAttack();
-        subAttackTimer = SubAtatckCoolDown;
+        subAttackTimer = SubAttackCoolDown;
     }
     public void TrySkill()
     {

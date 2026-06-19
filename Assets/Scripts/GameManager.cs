@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 
     //임시
     [SerializeField] GameObject player;
-    [SerializeField] GameObject prefab;
+    [SerializeField] GameObject[] prefab;
     [SerializeField] Transform characterRoot;
     //외부 참조
     [SerializeField] private InputActionAsset inputActions;
@@ -25,10 +25,15 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        GameObject go = Instantiate(prefab, characterRoot.position, Quaternion.identity);
+        GameObject go = Instantiate(prefab[0], characterRoot.position, Quaternion.identity);
         go.SetActive(false);
         PlayerPartyManager.Instance.AddCharacter(go);
         player.GetComponent<PlayerController>().SwitchPlayerCharacter(1);
+
+        go = Instantiate(prefab[1], characterRoot.position, Quaternion.identity);
+        go.SetActive(false);
+        PlayerPartyManager.Instance.AddCharacter(go);
+
         WaveManager.Instance.StartWaveManager();
     }
 

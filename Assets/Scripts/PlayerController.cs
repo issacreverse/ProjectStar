@@ -76,17 +76,6 @@ public class PlayerController : MonoBehaviour
         DisableActions();
     }
 
-    public void SwitchPlayerCharacter(int characterNum)
-    {
-        PlayerPartyManager.Instance.SwitchCharacter(characterNum);
-        //초기화 다시 진행
-        GameObject currentPlayerObject = PlayerPartyManager.Instance.GetCurrentPlayerCharacter();
-        currentPlayerCharacter = currentPlayerObject.GetComponent<PlayerCharacterBase>();
-
-        moveSpeed = currentPlayerCharacter.MoveSpeed;
-        slowMoveSpeed = currentPlayerCharacter.SlowMoveSpeed;
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -101,7 +90,7 @@ public class PlayerController : MonoBehaviour
         if(isSlowMove)
             currentMoveSpeed= slowMoveSpeed;
 
-        transform.Translate(moveValue * currentMoveSpeed * Time.deltaTime);
+        transform.Translate(moveValue.normalized * currentMoveSpeed * Time.deltaTime);
 
         //플레이어가 화면 밖으로 나가지 못하도록 위치를 강제조정한다. 
         Vector3 pos = transform.position;
@@ -176,5 +165,22 @@ public class PlayerController : MonoBehaviour
         switchAction1.Disable();
         switchAction2.Disable();
         switchAction3.Disable();
+    }
+
+    //외부 공개 함수
+    public void SwitchPlayerCharacter(int characterNum)
+    {
+        PlayerPartyManager.Instance.SwitchCharacter(characterNum);
+        //초기화 다시 진행
+        GameObject currentPlayerObject = PlayerPartyManager.Instance.GetCurrentPlayerCharacter();
+        currentPlayerCharacter = currentPlayerObject.GetComponent<PlayerCharacterBase>();
+
+        moveSpeed = currentPlayerCharacter.MoveSpeed;
+        slowMoveSpeed = currentPlayerCharacter.SlowMoveSpeed;
+    }
+    public Vector2 GetInputDirection()
+    {
+        Vector2 moveValue = moveAction.ReadValue<Vector2>();
+        return moveValue.normalized;
     }
 }

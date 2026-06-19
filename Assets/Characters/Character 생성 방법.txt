@@ -5,4 +5,10 @@ Character 생성 방법
 3. 태그를 Player, 레이어를 Player로 설정한다. 
 4. Sprite Renderer에 필요한 이미지를 넣는다.  
 5. Character_[이름] 스크립트 컴포넌트를 넣는다. 필요한 값이나 프리팹을 전부 넣는다.
+5-1. 탄알 프리팹이 필요할 텐데 탄알 프리팹을 만드는 법은 다음과 같다 
+-sprite2D
+-레이어와 태그를 Bullet으로
+-circleCollider2D, isTrigger를 체크. 
+-rigidBody2D, gravityScale 을 0으로.
+-Bullet 스크립트 추가
  
