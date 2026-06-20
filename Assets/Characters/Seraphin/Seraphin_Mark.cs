@@ -12,9 +12,8 @@ public class Seraphin_Mark : Bullet
     {
         isAttached = false;
     }
-    protected override void Update()
+    protected override void Update()    
     {
-        print(isAttached);
         //부착되었다면 더이상 일반 탄알처럼 행동하지 않는다. 
         if(isAttached)
             return;
@@ -63,7 +62,7 @@ public class Seraphin_Mark : Bullet
                     //부착된 이 스크립트에서 추가배수 데미지를 마저 넣어준다.
                     if(_enemyField == null)
                         _enemyField = gameObject.GetComponent<EnemyField>();
-                    _enemyField.TakeDamage(bulletDamage * (GameConstants.SYNC_DAMAGE_MULTIPLIER - 1f));
+                    _enemyField.TakeDamage(other.GetComponent<Bullet>().bulletDamage * (GameConstants.SYNC_DAMAGE_MULTIPLIER - 1f));
                 }
             }
         }

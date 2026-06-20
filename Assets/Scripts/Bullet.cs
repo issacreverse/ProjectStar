@@ -28,6 +28,15 @@ public class Bullet : MonoBehaviour
     //HomingWiggleMissile 필드
     private Transform target;
     private float retargetTimer;
+
+    //Bezier 필드
+    private float timer;
+    private float duration;
+    private Vector3 startPoint;
+    private Vector3 controlPoint;
+    private Vector3 endPoint;
+    private Vector3 velocity;
+
     
     public void Initialize(BulletForm bulletForm, ElementType bulletType, float bulletDamage, float bulletSpeed)
     {
@@ -49,10 +58,23 @@ public class Bullet : MonoBehaviour
                 moveDirection = Vector3.right;
             }
         }
+        else if(bulletForm == BulletForm.Bezier)
+        {
+            timer = 0f;
+            duration = Vector3.Distance(startPoint, endPoint) / bulletSpeed;
+            print("startPoint: " + startPoint);
+            print("controlPoint: " + controlPoint);
+            print("endPoint: " + endPoint);
+            print("bulletSpeed: " + bulletSpeed);
+            print("Distance: " + Vector3.Distance(startPoint, endPoint));
+            print("Duration: " + duration);
+            moveDirection = (endPoint - controlPoint).normalized;
+        }
     }
     // Update is called once per frame
     protected virtual void Update()
     {
+        print(bulletSpeed);
         switch(bulletForm)
         {
             case BulletForm.Normal:
@@ -60,6 +82,19 @@ public class Bullet : MonoBehaviour
                 break;
             case BulletForm.HomingWiggleMissle:
                 MoveHomingWiggleMissile();
+                break;
+            case BulletForm.Bezier:
+                if(timer < duration)
+                {
+                    MoveBezier();
+                    Debug.Log("Bezier Move");
+                }
+                else
+                {
+                    print(bulletSpeed);
+                    MoveNormal();
+                    Debug.Log("Normal Move");
+                }
                 break;
         }
         
@@ -159,11 +194,33 @@ public class Bullet : MonoBehaviour
         float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg;
         transform.rotation =  Quaternion.Euler(0f, 0f, angle);
     }
+    private void MoveBezier()
+    {
+        timer += Time.deltaTime;
+        float t = Mathf.Clamp01(timer / duration);
+
+        transform.position = GetQuadricBezierPoint(t, startPoint, controlPoint, endPoint);
+    }
+
+    private Vector3 GetQuadricBezierPoint(float t, Vector3 p0, Vector3 p1, Vector3 p2)
+    {
+        Vector3 a = Vector3.Lerp(p0, p1, t);
+        Vector3 b = Vector3.Lerp(p1, p2, t);
+        
+        return Vector3.Lerp(a, b, t);
+    }
+    public void SetBezierPoints(Vector3 start, Vector3 control, Vector3 end)
+    {
+        startPoint = start;
+        controlPoint = control;
+        endPoint = end;
+    }
 }
 
 public enum BulletForm
 {
     Normal,
     HomingMissile,
-    HomingWiggleMissle
+    HomingWiggleMissle,
+    Bezier
 }

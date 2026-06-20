@@ -53,7 +53,7 @@ public abstract class PlayerCharacterBase: MonoBehaviour
         //캐릭터가 다운 상태일 경우 쿨타임 타이머가 느리게 돕니다. 
         if(isCharacterDown)
         {
-            baseAttackTimer = 0;
+            baseAttackTimer = 0.01f; //다운 상태에서는 기본 공격 쿨타임이 의미 없지만 0으로 할 경우 무한 공격이 가능해질 수 있으므로 아주 작은 값으로 설정함. 
             subAttackTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
             skillTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
             ultimateTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
@@ -79,6 +79,16 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     {
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
         bullet.GetComponent<Bullet>().Initialize(bulletForm, bulletType, bulletDamage, bulletSpeed);
+    }
+    protected void ShootBullet_Bezier(GameObject bulletPrefab, Vector3 spawnPos, ElementType bulletType, float bulletDamage, float bulletSpeed, Vector3 controlPointOffset, Vector3 endPointOffset)
+    {
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
+        //베지에 곡선의 제어점과 끝점을 설정
+        Vector3 controlPoint = spawnPos + controlPointOffset;
+        Vector3 endPoint = spawnPos + endPointOffset;
+
+        bullet.GetComponent<Bullet>().SetBezierPoints(spawnPos, controlPoint, endPoint);
+        bullet.GetComponent<Bullet>().Initialize(BulletForm.Bezier, bulletType, bulletDamage, bulletSpeed);
     }
 
     //내부 함수

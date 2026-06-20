@@ -55,6 +55,12 @@ public class Character_Seraphin : PlayerCharacterBase
 
     [Header("Ultimate")]
     [SerializeField] private float ultimateCoolDown = 60f;
+    [SerializeField] private float ultimateDamage = 4f;
+    [SerializeField] private int ultimateBulletCount = 20;
+    [SerializeField] private float ultimateBulletSpeed = 30f;
+    [SerializeField] private float ultimateBulletInterval = 0.1f;
+    [SerializeField] private float ultimateRange = 12f;
+    [SerializeField] private GameObject ultimatePrefab;
 
     //외부 참조 
     [Header("External References")]
@@ -95,9 +101,20 @@ public class Character_Seraphin : PlayerCharacterBase
     }
     protected override void Ultimate()
     {
-        //화면에 보이는 모든 적 탄환 삭제.
+        //휘어 들어가는 빛의 탄환을 2갈래로 10개씩 발사. (총 20발)
+        //공격력 4
         //쿨타임 60초
+        StartCoroutine(SpawnUltimate());
     } 
+    private IEnumerator SpawnUltimate()
+    {
+        for(int i = 0; i < ultimateBulletCount/2; i++)
+        {
+            ShootBullet_Bezier(ultimatePrefab, shootingPos.position, ElementType.Light, ultimateDamage, ultimateBulletSpeed, new Vector3(2f, 2f, 0f), new Vector3(ultimateRange, 0f, 0f));
+            ShootBullet_Bezier(ultimatePrefab, shootingPos.position, ElementType.Light, ultimateDamage, ultimateBulletSpeed, new Vector3(2f, -2f, 0f), new Vector3(ultimateRange, 0f, 0f));
+            yield return new WaitForSeconds(ultimateBulletInterval);
+        }
+    }
 
     private IEnumerator SpawnShield()
     {

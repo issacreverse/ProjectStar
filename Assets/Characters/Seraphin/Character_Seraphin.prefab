@@ -190,4 +190,10 @@ MonoBehaviour:
   shieldPrefab: {fileID: 3669614191660475753, guid: 056fe0f4ed45da74e8c517ad2ef754ba, type: 3}
   shieldPos: {fileID: 2572281947728395020}
   ultimateCoolDown: 60
+  ultimateDamage: 4
+  ultimateBulletCount: 20
+  ultimateBulletSpeed: 30
+  ultimateBulletInterval: 0.15
+  ultimateRange: 12
+  ultimatePrefab: {fileID: 4633612872174869941, guid: a88c6e7f85d98c84f9e43047cdf7426a, type: 3}
   shootingPos: {fileID: 3415062274950550007}
