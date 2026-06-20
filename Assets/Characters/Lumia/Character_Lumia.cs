@@ -95,6 +95,7 @@ public class Character_Lumia : PlayerCharacterBase
     {
         //화면에 보이는 모든 적 탄환 삭제.
         //쿨타임 60초
+        PoolingManager.Instance.EraseAllActiveBullets();
     } 
 
     private IEnumerator Invincible()
