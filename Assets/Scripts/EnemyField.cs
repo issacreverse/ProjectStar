@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class EnemyField : MonoBehaviour
 {
@@ -6,6 +7,9 @@ public class EnemyField : MonoBehaviour
     //연산에 필요한 데이터는 모두 DataManager에서 직접 받아옵니다. 
     private EnemyController _enemyController;
     private EnemyData enemyData;
+
+    //적 이벤트
+    public event Action<float> OnEnemyDamaged;
 
     //적 필드 
     private string enemyId;
@@ -37,8 +41,7 @@ public class EnemyField : MonoBehaviour
     public void TakeDamage(float damage)
     {
         hitPoints -= damage;
-        //print(hitPoints);
-        //print(damage);
+        OnEnemyDamaged?.Invoke(damage);
     }
     //죽을 때 호출됩니다. 
     public void Die()

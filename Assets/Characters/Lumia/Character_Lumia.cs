@@ -40,7 +40,7 @@ public class Character_Lumia : PlayerCharacterBase
 
     [Header("Sub Attack")]
     [SerializeField] private float subAttackDamage = 30;
-    [SerializeField] private int subAttackCount = 1;
+    //[SerializeField] private int subAttackCount = 1;
     [SerializeField] private float subAttackBulletSpeed = 14f;
     [SerializeField] private float subAttackCoolDown = 5f;
     [SerializeField] private GameObject subAttackPrefab;
@@ -67,7 +67,7 @@ public class Character_Lumia : PlayerCharacterBase
         //탄 크기 넓음 -> 탄알 프리팹 반영 필요
         //공격력 5
 
-        ShootBullet(baseAttackPrefab, shootingPos.position, BulletForm.Normal, ElementType.Plain, baseAttackDamage, baseAttackBulletSpeed);
+        ShootBullet(baseAttackPrefab, shootingPos, BulletForm.Normal, ElementType.Plain, baseAttackDamage, baseAttackBulletSpeed);
     }
     protected override void SubAttack()
     {
@@ -77,7 +77,7 @@ public class Character_Lumia : PlayerCharacterBase
         //공격력 30초
         //쿨타임 5초
 
-        ShootBullet(subAttackPrefab, shootingPos.position, BulletForm.HomingWiggleMissle, ElementType.Plain, subAttackDamage, subAttackBulletSpeed);
+        ShootBullet(subAttackPrefab, shootingPos, BulletForm.HomingWiggleMissle, ElementType.Plain, subAttackDamage, subAttackBulletSpeed);
     }
     protected override void Skill()
     {

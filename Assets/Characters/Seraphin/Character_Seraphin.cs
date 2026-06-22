@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Character_Seraphin : PlayerCharacterBase
@@ -41,7 +40,7 @@ public class Character_Seraphin : PlayerCharacterBase
 
     [Header("Sub Attack")]
     [SerializeField] private float subAttackDamage = 8;
-    [SerializeField] private int subAttackCount = 1;
+    //[SerializeField] private int subAttackCount = 1;
     [SerializeField] private float subAttackBulletSpeed = 40f;
     [SerializeField] private float subAttackCoolDown = 8f;
     [SerializeField] private GameObject subAttackPrefab;
@@ -76,7 +75,7 @@ public class Character_Seraphin : PlayerCharacterBase
         //탄 크기 보통
         //공격력 3
 
-        ShootBullet(baseAttackPrefab, shootingPos.position, BulletForm.Normal, ElementType.Light, baseAttackDamage, baseAttackBulletSpeed);
+        ShootBullet(baseAttackPrefab, shootingPos, BulletForm.Normal, ElementType.Light, baseAttackDamage, baseAttackBulletSpeed);
     }
     protected override void SubAttack()
     {
@@ -85,7 +84,7 @@ public class Character_Seraphin : PlayerCharacterBase
         //공격력 8
         //쿨타임 8초
 
-        ShootBullet(subAttackPrefab, shootingPos.position, BulletForm.Normal, ElementType.Light, subAttackDamage, subAttackBulletSpeed);
+        ShootBullet(subAttackPrefab, shootingPos, BulletForm.Normal, ElementType.Light, subAttackDamage, subAttackBulletSpeed);
     }
     protected override void Skill()
     {
@@ -110,12 +109,11 @@ public class Character_Seraphin : PlayerCharacterBase
     {
         for(int i = 0; i < ultimateBulletCount/2; i++)
         {
-            ShootBullet_Bezier(ultimatePrefab, shootingPos.position, ElementType.Light, ultimateDamage, ultimateBulletSpeed, new Vector3(2f, 2f, 0f), new Vector3(ultimateRange, 0f, 0f));
-            ShootBullet_Bezier(ultimatePrefab, shootingPos.position, ElementType.Light, ultimateDamage, ultimateBulletSpeed, new Vector3(2f, -2f, 0f), new Vector3(ultimateRange, 0f, 0f));
+            ShootBullet_Bezier(ultimatePrefab, shootingPos, ElementType.Light, ultimateDamage, ultimateBulletSpeed, new Vector3(2f, 2f, 0f), new Vector3(ultimateRange, 0f, 0f));
+            ShootBullet_Bezier(ultimatePrefab, shootingPos, ElementType.Light, ultimateDamage, ultimateBulletSpeed, new Vector3(2f, -2f, 0f), new Vector3(ultimateRange, 0f, 0f));
             yield return new WaitForSeconds(ultimateBulletInterval);
         }
     }
-
     private IEnumerator SpawnShield()
     {
         //실드 생성

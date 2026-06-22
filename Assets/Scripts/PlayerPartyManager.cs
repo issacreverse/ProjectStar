@@ -1,11 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using System;
 
 public class PlayerPartyManager : MonoBehaviour
 {
     public static PlayerPartyManager Instance; 
 
-    private const int MAX_PARTY_CHARACTERS = 3;
     private const float SWITCH_COOLDOWN = 3;
 
     [SerializeField] private Transform characterRoot;
@@ -15,6 +15,9 @@ public class PlayerPartyManager : MonoBehaviour
     private GameObject[] party;  
     private int idx;
     private bool isSwitchReady;
+
+    //플레이어 교체 이벤트
+    private Action[] OnSwitchCharacters;
     
 
     void Awake()
@@ -24,10 +27,12 @@ public class PlayerPartyManager : MonoBehaviour
             Instance = this;
         }
 
-        party = new GameObject[MAX_PARTY_CHARACTERS];
+        party = new GameObject[GameConstants.MAX_PARTY_CHARACTERS];
 
         idx = 0;
         isSwitchReady = true;
+
+        OnSwitchCharacters = new Action[3];
     }
     public void AddCharacter(GameObject character)
     {
@@ -41,6 +46,7 @@ public class PlayerPartyManager : MonoBehaviour
 
     public void SwitchCharacter(int num)
     {   
+        int idx = num-1;
         //교체 쿨타임이 돌아야 진행
         if(!isSwitchReady)
             return;
@@ -48,7 +54,7 @@ public class PlayerPartyManager : MonoBehaviour
         //아닐 경우에만 교체 진행
         if(currentPlayerObject != null)
         {
-            if(currentPlayerObject == party[num-1])
+            if(currentPlayerObject == party[idx])
                 return;
         }
         //실제 교체 구현부
@@ -56,6 +62,7 @@ public class PlayerPartyManager : MonoBehaviour
     }
     private IEnumerator SwitchCoroutine(int num)
     {
+        int idx = num-1;
         isSwitchReady = false;
 
         if(currentPlayerObject != null)
@@ -63,9 +70,13 @@ public class PlayerPartyManager : MonoBehaviour
             currentPlayerObject.SetActive(false);
         }
         
-        currentPlayerObject = party[num-1];
+        currentPlayerObject = party[idx];
 
         currentPlayerObject.SetActive(true);
+        //외부에서 등록한 캐릭터 교체 이벤트 호출
+        OnSwitchCharacters[idx]?.Invoke();
+        //캐릭터 고유의 교체 콜백 함수 호출 
+        currentPlayerObject.GetComponent<PlayerCharacterBase>().OnSwitchCharacter();
 
         yield return new WaitForSeconds(SWITCH_COOLDOWN);
 
@@ -74,5 +85,25 @@ public class PlayerPartyManager : MonoBehaviour
     public GameObject GetCurrentPlayerCharacter()
     {
         return currentPlayerObject;
+    }
+    public void PartyHeal(float amount)
+    {
+        foreach(GameObject character in party)
+        {
+            character.GetComponent<PlayerCharacterBase>().Heal(amount);
+        }
+    }
+    public GameObject[] GetParty()
+    {
+        return party;
+    }
+
+    public void Subscribe(int idx, Action handler)
+    {
+        OnSwitchCharacters[idx] += handler;
+    }
+    public void UnSubscribe(int idx, Action handler)
+    {
+        OnSwitchCharacters[idx] -= handler;
     }
 }

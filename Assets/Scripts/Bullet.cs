@@ -23,7 +23,8 @@ public class Bullet : MonoBehaviour
     [NonSerialized] public ElementType bulletType;
     private float bulletSpeed;
     [NonSerialized] public float bulletDamage;
-    private Vector3 moveDirection = Vector3.right;
+    private Vector3 moveDirection;
+    private Vector3 localDirection = Vector3.right;
 
     //HomingWiggleMissile 필드
     private Transform target;
@@ -44,6 +45,7 @@ public class Bullet : MonoBehaviour
         this.bulletType = bulletType;
         this.bulletDamage = bulletDamage;
         this.bulletSpeed = bulletSpeed;
+        moveDirection = transform.rotation * localDirection;
 
         if(bulletForm == BulletForm.HomingWiggleMissle)
         {

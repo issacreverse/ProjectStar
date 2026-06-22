@@ -34,6 +34,10 @@ public class GameManager : MonoBehaviour
         go.SetActive(false);
         PlayerPartyManager.Instance.AddCharacter(go);
 
+        go = Instantiate(prefab[2], characterRoot.position, Quaternion.identity);
+        go.SetActive(false);
+        PlayerPartyManager.Instance.AddCharacter(go);
+
         WaveManager.Instance.StartWaveManager();
     }
 

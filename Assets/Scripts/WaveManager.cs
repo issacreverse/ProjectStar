@@ -28,6 +28,10 @@ public class WaveManager : MonoBehaviour
     //GameManager에서 관리하는 WaveManager on/off 변수
     private bool isWaveManagerActive = false;
 
+    //적 피격 이벤트를 모두 구독하는 허브 이벤트
+    public event Action<float> OnEnemyDamagedHub;
+    
+
     void Start()
     {
         //싱글톤 초기화
@@ -242,6 +246,7 @@ public class WaveManager : MonoBehaviour
         }
     }
     //EnemyGroup에 있는 적들을 모두 스폰하는 코루틴 
+    //실질적으로 적을 생성하는 함수 
     public IEnumerator StartEnemyGroupSpawn(EnemyGroup groupData)
     {
         //선딜레이 반영 
@@ -272,7 +277,10 @@ public class WaveManager : MonoBehaviour
                 break;
             }
             
-            var enemy = Instantiate(enemyObj, spawnPos, Quaternion.identity);   
+            //적 생성!
+            var enemy = Instantiate(enemyObj, spawnPos, Quaternion.identity); 
+            //적 이벤트 구독 
+            enemy.GetComponent<EnemyField>().OnEnemyDamaged += OnEnemyDamagedHub;
 
             //현재 화면 정보 값들 업데이트 
             currentActiveEnemyList.Add(enemy.GetComponent<EnemyController>());
@@ -294,7 +302,7 @@ public class WaveManager : MonoBehaviour
         
         return false;
     }
-    
+    //외부에서 적을 제거하는 등의 행위를 할 때, currentActiveEnemyList에서도 제거해주기 위한 함수. 반드시 같이 호출해줘야된다. 
     public void RemoveEnemyFromList(EnemyController e)
     {
         if(currentActiveEnemyList.Contains(e))
@@ -309,5 +317,12 @@ public class WaveManager : MonoBehaviour
     public List<EnemyController> GetActiveEnemyList()
     {
         return currentActiveEnemyList;
+    }
+
+    private void HandleEnemyDamaged(float damage)
+    {
+        //OnEnemyDamaged를 구독하는 함수. 
+        //다른 함수들이 구독할 수 있는 허브 이벤트를 이어서 트리거한다. 
+        OnEnemyDamagedHub?.Invoke(damage);
     }
 }

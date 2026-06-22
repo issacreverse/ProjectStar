@@ -1,6 +1,6 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public abstract class PlayerCharacterBase: MonoBehaviour
 {
@@ -75,22 +75,31 @@ public abstract class PlayerCharacterBase: MonoBehaviour
             CharacterDown();
         }
     } 
-    protected void ShootBullet(GameObject bulletPrefab, Vector3 spawnPos, BulletForm bulletForm, ElementType bulletType, float bulletDamage, float bulletSpeed)
+    protected void ShootBullet(GameObject bulletPrefab, Transform spawnPos, BulletForm bulletForm, ElementType bulletType, float bulletDamage, float bulletSpeed)
     {
-        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos.position, spawnPos.rotation);
         bullet.GetComponent<Bullet>().Initialize(bulletForm, bulletType, bulletDamage, bulletSpeed);
     }
-    protected void ShootBullet_Bezier(GameObject bulletPrefab, Vector3 spawnPos, ElementType bulletType, float bulletDamage, float bulletSpeed, Vector3 controlPointOffset, Vector3 endPointOffset)
+    protected void ShootBullet_Bezier(GameObject bulletPrefab, Transform spawnPos, ElementType bulletType, float bulletDamage, float bulletSpeed, Vector3 controlPointOffset, Vector3 endPointOffset)
     {
-        GameObject bullet = Instantiate(bulletPrefab, spawnPos, Quaternion.identity);
+        GameObject bullet = Instantiate(bulletPrefab, spawnPos.position, spawnPos.rotation);
         //베지에 곡선의 제어점과 끝점을 설정
-        Vector3 controlPoint = spawnPos + controlPointOffset;
-        Vector3 endPoint = spawnPos + endPointOffset;
+        Vector3 controlPoint = spawnPos.position + controlPointOffset;
+        Vector3 endPoint = spawnPos.position + endPointOffset;
 
-        bullet.GetComponent<Bullet>().SetBezierPoints(spawnPos, controlPoint, endPoint);
+        bullet.GetComponent<Bullet>().SetBezierPoints(spawnPos.position, controlPoint, endPoint);
         bullet.GetComponent<Bullet>().Initialize(BulletForm.Bezier, bulletType, bulletDamage, bulletSpeed);
     }
-
+    protected virtual void HandleStageEnvironmentChange()
+    {
+        //스테이지 환경 변수가 바뀌었을 때 호출되는 콜백 함수. 
+        //나중에 이벤트 등록해두는 거 잊지 않기. 
+        //각 캐릭터 함수는 이 함수를 오버라이딩하고 본인의 함수를 실행한다. (예: 버프 계산 함수)
+    }
+    public virtual void OnSwitchCharacter()
+    {
+        //switch했을 때 실행할 함수 각자 구현 
+    }
     //내부 함수
     private void CharacterDown()
     {
@@ -119,6 +128,12 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     {
         currentHitPoints -= damage;
         //피격 무적 시간
+    }
+    public void Heal(float amount)
+    {
+        currentHitPoints += amount;
+        if(currentHitPoints >= MaxHitPoints)
+            currentHitPoints = MaxHitPoints;
     }
     public void TryBaseAttack()
     {
