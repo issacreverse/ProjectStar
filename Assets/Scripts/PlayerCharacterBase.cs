@@ -17,7 +17,7 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     protected abstract float BaseAttackCoolDown {get;}
     protected abstract float SubAttackCoolDown {get;}
     protected abstract float SkillCoolDown {get;}
-    protected abstract float UltimateCoolDown {get;}
+    //protected abstract float UltimateCoolDown {get;}
 
     protected abstract float DownCoolDownDecreaseRatio {get;}
 
@@ -35,7 +35,8 @@ public abstract class PlayerCharacterBase: MonoBehaviour
     private float baseAttackTimer;
     private float subAttackTimer;
     private float skillTimer;
-    private float ultimateTimer;
+    //private float ultimateTimer;
+
 
     //상속 함수
     protected virtual void Awake()
@@ -45,10 +46,11 @@ public abstract class PlayerCharacterBase: MonoBehaviour
         baseAttackTimer = 0f;
         subAttackTimer = 0f;
         skillTimer = 0f;
-        ultimateTimer = 0f;
+        //ultimateTimer = 0f;
     }
     protected virtual void Update()
     {
+        DebugUIManager.Instance.WriteUI("Hit Points: " + currentHitPoints);
         //쿨타임 타이머를 돌게합니다.
         //캐릭터가 다운 상태일 경우 쿨타임 타이머가 느리게 돕니다. 
         if(isCharacterDown)
@@ -56,14 +58,14 @@ public abstract class PlayerCharacterBase: MonoBehaviour
             baseAttackTimer = 0.01f; //다운 상태에서는 기본 공격 쿨타임이 의미 없지만 0으로 할 경우 무한 공격이 가능해질 수 있으므로 아주 작은 값으로 설정함. 
             subAttackTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
             skillTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
-            ultimateTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
+            //ultimateTimer -= Time.deltaTime * DownCoolDownDecreaseRatio;
         }
         else
         {
             baseAttackTimer -= Time.deltaTime;
             subAttackTimer -= Time.deltaTime;
             skillTimer -= Time.deltaTime;
-            ultimateTimer -= Time.deltaTime;
+            //ultimateTimer -= Time.deltaTime;
         }
         
 
@@ -156,12 +158,15 @@ public abstract class PlayerCharacterBase: MonoBehaviour
         Skill();
         skillTimer = SkillCoolDown;
     }
-    public void TryUltimate()
+    public void TryUltimate(float ultimateTimer, out bool resetTimer)
     {
         if(ultimateTimer > 0f)
+        {
+            resetTimer = false;
             return;
+        }
         Ultimate();
-        ultimateTimer = UltimateCoolDown;
+        resetTimer = true;
     }
     public void TryAbility()
     {

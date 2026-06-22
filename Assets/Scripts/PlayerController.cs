@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour
     //내부 필드
     private PlayerCharacterBase currentPlayerCharacter;
     private float moveSpeed;
-    private float slowMoveSpeed;     
+    private float slowMoveSpeed;  
+
+    private float ultimateTimer;        //궁극기는 쿨타임 공유이므로 PlayerController에서 제어한다.    
     
     //Input System Package 
     private InputActionAsset inputActions;
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        ultimateTimer = 0f;
         isActionsReady = false;
         DontDestroyOnLoad(gameObject);
     }
@@ -115,26 +118,36 @@ public class PlayerController : MonoBehaviour
         {
             currentPlayerCharacter.TrySubAttack();
         }
+
         if(skillAction.IsPressed())
         {
             currentPlayerCharacter.TrySkill();
         }
+
+        ultimateTimer -= Time.deltaTime;        //궁극기 쿨타임 감소 계산 
         if(ultimateAction.IsPressed())
         {
-            currentPlayerCharacter.TryUltimate();
+            currentPlayerCharacter.TryUltimate(ultimateTimer, out bool resetTimer);
+            if(resetTimer)
+            {
+                ultimateTimer = GameConstants.ULTIMATE_COOLDOWN;
+            }
         }
+
         if(switchAction1.IsPressed())
         {
             //첫번째 캐릭터를 사용 중이 아니라면
             //PlayerParty에서 첫번째 캐릭터를 가져온다. 
             SwitchPlayerCharacter(1);
         }
+
         if(switchAction2.IsPressed())
         {
             //두번째 캐릭터를 사용 중이 아니라면
             //PlayerParty에서 두번째 캐릭터를 가져온다. 
             SwitchPlayerCharacter(2);
         }
+
         if(switchAction3.IsPressed())
         {
             //세번째 캐릭터를 사용 중이 아니라면

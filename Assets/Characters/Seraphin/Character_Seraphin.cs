@@ -17,7 +17,7 @@ public class Character_Seraphin : PlayerCharacterBase
     protected override float BaseAttackCoolDown => 1f / baseAttackRate;
     protected override float SubAttackCoolDown => subAttackCoolDown;
     protected override float SkillCoolDown => skillCoolDown;
-    protected override float UltimateCoolDown => ultimateCoolDown;
+    //protected override float UltimateCoolDown => ultimateCoolDown;
 
     protected override float DownCoolDownDecreaseRatio => downCoolDownDecreaseRatio;
 
@@ -53,7 +53,7 @@ public class Character_Seraphin : PlayerCharacterBase
     [SerializeField] private Transform shieldPos;
 
     [Header("Ultimate")]
-    [SerializeField] private float ultimateCoolDown = 60f;
+    //[SerializeField] private float ultimateCoolDown = 60f;
     [SerializeField] private float ultimateDamage = 4f;
     [SerializeField] private int ultimateBulletCount = 20;
     [SerializeField] private float ultimateBulletSpeed = 30f;

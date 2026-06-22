@@ -17,7 +17,7 @@ public class Character_Lumia : PlayerCharacterBase
     protected override float BaseAttackCoolDown => 1f / baseAttackRate;
     protected override float SubAttackCoolDown => subAttackCoolDown;
     protected override float SkillCoolDown => skillCoolDown;
-    protected override float UltimateCoolDown => ultimateCoolDown;
+    //protected override float UltimateCoolDown => ultimateCoolDown;
 
     protected override float DownCoolDownDecreaseRatio => downCoolDownDecreaseRatio;
 
@@ -51,7 +51,7 @@ public class Character_Lumia : PlayerCharacterBase
     [SerializeField] private float skillCoolDown = 12f;
 
     [Header("Ultimate")]
-    [SerializeField] private float ultimateCoolDown = 60f;
+    //[SerializeField] private float ultimateCoolDown = 60f;
 
     //외부 참조 
     [Header("External References")]

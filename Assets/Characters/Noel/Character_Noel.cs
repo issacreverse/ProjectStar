@@ -17,7 +17,7 @@ public class Character_Noel : PlayerCharacterBase
     protected override float BaseAttackCoolDown => 1f / baseAttackRate;
     protected override float SubAttackCoolDown => subAttackCoolDown;
     protected override float SkillCoolDown => skillCoolDown;
-    protected override float UltimateCoolDown => ultimateCoolDown;
+    //protected override float UltimateCoolDown => ultimateCoolDown;
 
     protected override float DownCoolDownDecreaseRatio => downCoolDownDecreaseRatio;
 
@@ -48,7 +48,7 @@ public class Character_Noel : PlayerCharacterBase
     [SerializeField] private float skillCoolDown = 40f;
 
     [Header("Ultimate")]
-    [SerializeField] private float ultimateCoolDown = 60f;
+    //[SerializeField] private float ultimateCoolDown = 60f;
     [SerializeField] private float ultimateHealAmount = 150f;
 
     //캐릭터 교체시 호출되는 이벤트에 등록하는 델리게이트. 람다함수를 저장해두고, 람다함수가 원하는 함수를 호출하도록 한다. 
